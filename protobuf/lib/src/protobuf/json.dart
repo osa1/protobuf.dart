@@ -109,11 +109,9 @@ void _appendJsonList(
     var value = jsonList[i];
     var convertedValue =
         _convertJsonValue(fs, value, fi.tagNumber, fi.type, registry);
-    // In the case of an unknown enum value, the converted value may return
-    // null. The default enum value should be used in these cases, which is
-    // stored in the FieldInfo.
-    convertedValue ??= fi.defaultEnumValue;
-    repeated.add(convertedValue);
+    if (convertedValue != null) {
+      repeated.add(convertedValue);
+    }
   }
 }
 
@@ -122,22 +120,18 @@ void _appendJsonMap(
   PbMap map = fi._ensureMapField(fs);
   for (Map<String, dynamic> jsonEntry in jsonList) {
     var entryFieldSet = map._entryFieldSet();
-    var convertedKey = _convertJsonValue(
+    final convertedKey = _convertJsonValue(
         entryFieldSet,
         jsonEntry['${PbMap._keyFieldNumber}'],
         PbMap._keyFieldNumber,
         fi.keyFieldType,
         registry);
-    var convertedValue = _convertJsonValue(
+    final convertedValue = _convertJsonValue(
         entryFieldSet,
         jsonEntry['${PbMap._valueFieldNumber}'],
         PbMap._valueFieldNumber,
         fi.valueFieldType,
         registry);
-    // In the case of an unknown enum value, the converted value may return
-    // null. The default enum value should be used in these cases, which is
-    // stored in the FieldInfo.
-    convertedValue ??= fi.defaultEnumValue;
     map[convertedKey] = convertedValue;
   }
 }
@@ -159,9 +153,8 @@ void _setJsonField(
 /// Converts [value] from the Json format to the Dart data type
 /// suitable for inserting into the corresponding [GeneratedMessage] field.
 ///
-/// Returns the converted value.  This function returns [null] if it is an
-/// unknown enum value, in which case the caller should figure out the default
-/// enum value to return instead.
+/// Returns the converted value.  This function returns [null] if the caller
+/// should ignore the field value, because it is an unknown enum value.
 /// This function throws [ArgumentError] if it cannot convert the value.
 dynamic _convertJsonValue(_FieldSet fs, value, int tagNumber, int fieldType,
     ExtensionRegistry registry) {

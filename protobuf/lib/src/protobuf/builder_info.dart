@@ -60,12 +60,11 @@ class BuilderInfo {
       int valueFieldType,
       BuilderInfo mapEntryBuilderInfo,
       CreateBuilderFunc valueCreator,
-      {ProtobufEnum defaultEnumValue,
-      String protoName}) {
+      {String protoName}) {
     var index = byIndex.length;
     _addField(MapFieldInfo<K, V>(name, tagNumber, index, PbFieldType.M,
         keyFieldType, valueFieldType, mapEntryBuilderInfo, valueCreator,
-        defaultEnumValue: defaultEnumValue, protoName: protoName));
+        protoName: protoName));
   }
 
   void addRepeated<T>(
@@ -76,15 +75,11 @@ class BuilderInfo {
       CreateBuilderFunc subBuilder,
       ValueOfFunc valueOf,
       List<ProtobufEnum> enumValues,
-      {ProtobufEnum defaultEnumValue,
-      String protoName}) {
+      {String protoName}) {
     var index = byIndex.length;
     _addField(FieldInfo<T>.repeated(
         name, tagNumber, index, fieldType, check, subBuilder,
-        valueOf: valueOf,
-        enumValues: enumValues,
-        defaultEnumValue: defaultEnumValue,
-        protoName: protoName));
+        valueOf: valueOf, enumValues: enumValues, protoName: protoName));
   }
 
   void _addField(FieldInfo fi) {
@@ -167,12 +162,11 @@ class BuilderInfo {
       {CreateBuilderFunc subBuilder,
       ValueOfFunc valueOf,
       List<ProtobufEnum> enumValues,
-      ProtobufEnum defaultEnumValue,
       String protoName}) {
     assert(_isGroupOrMessage(fieldType) || _isEnum(fieldType));
     addRepeated<T>(tagNumber, name, fieldType, _checkNotNull, subBuilder,
         valueOf, enumValues,
-        defaultEnumValue: defaultEnumValue, protoName: protoName);
+        protoName: protoName);
   }
 
   void aOM<T extends GeneratedMessage>(int tagNumber, String name,
@@ -214,7 +208,6 @@ class BuilderInfo {
       CreateBuilderFunc valueCreator,
       ValueOfFunc valueOf,
       List<ProtobufEnum> enumValues,
-      ProtobufEnum defaultEnumValue,
       PackageName packageName = const PackageName(''),
       String protoName}) {
     var mapEntryBuilderInfo = BuilderInfo(entryClassName, package: packageName)
@@ -224,7 +217,7 @@ class BuilderInfo {
 
     addMapField<K, V>(tagNumber, name, keyFieldType, valueFieldType,
         mapEntryBuilderInfo, valueCreator,
-        defaultEnumValue: defaultEnumValue, protoName: protoName);
+        protoName: protoName);
   }
 
   bool containsTagNumber(int tagNumber) => fieldInfo.containsKey(tagNumber);

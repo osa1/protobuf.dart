@@ -35,10 +35,6 @@ class FieldInfo<T> {
   // (Not used for other types.)
   final List<ProtobufEnum> enumValues;
 
-  // Default enum value, if type is a PbList<ProtobufEnum> or a
-  // PbMap<[anything], ProtobufEnum>.
-  final ProtobufEnum defaultEnumValue;
-
   // Looks up the enum value given its integer code.
   // (Not used for other types.)
   // see GeneratedMessage._getValueOfFunc
@@ -53,7 +49,6 @@ class FieldInfo<T> {
       this.subBuilder,
       this.valueOf,
       this.enumValues,
-      this.defaultEnumValue,
       String protoName})
       : makeDefault = findMakeDefault(type, defaultOrMaker),
         check = null,
@@ -74,12 +69,11 @@ class FieldInfo<T> {
         valueOf = null,
         check = null,
         enumValues = null,
-        defaultEnumValue = null,
         subBuilder = null;
 
   FieldInfo.repeated(this.name, this.tagNumber, this.index, this.type,
       this.check, this.subBuilder,
-      {this.valueOf, this.enumValues, this.defaultEnumValue, String protoName})
+      {this.valueOf, this.enumValues, String protoName})
       : makeDefault = (() => PbList<T>(check: check)),
         protoName = protoName ?? _unCamelCase(name) {
     assert(name != null);
@@ -217,12 +211,10 @@ class MapFieldInfo<K, V> extends FieldInfo<PbMap<K, V>> {
       this.valueFieldType,
       this.mapEntryBuilderInfo,
       this.valueCreator,
-      {ProtobufEnum defaultEnumValue,
-      String protoName})
+      {String protoName})
       : super(name, tagNumber, index, type,
             defaultOrMaker: () =>
                 PbMap<K, V>(keyFieldType, valueFieldType, mapEntryBuilderInfo),
-            defaultEnumValue: defaultEnumValue,
             protoName: protoName) {
     assert(name != null);
     assert(tagNumber != null);
