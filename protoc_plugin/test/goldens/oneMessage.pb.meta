@@ -9,8 +9,8 @@ annotation: {
   path: 4
   path: 0
   sourceFile: test
-  begin: 1011
-  end: 1022
+  begin: 1082
+  end: 1093
 }
 annotation: {
   path: 4
@@ -18,8 +18,8 @@ annotation: {
   path: 2
   path: 0
   sourceFile: test
-  begin: 2751
-  end: 2757
+  begin: 2822
+  end: 2828
 }
 annotation: {
   path: 4
@@ -27,8 +27,8 @@ annotation: {
   path: 2
   path: 0
   sourceFile: test
-  begin: 2799
-  end: 2805
+  begin: 2870
+  end: 2876
 }
 annotation: {
   path: 4
@@ -36,8 +36,8 @@ annotation: {
   path: 2
   path: 0
   sourceFile: test
-  begin: 2878
-  end: 2887
+  begin: 2949
+  end: 2958
 }
 annotation: {
   path: 4
@@ -45,17 +45,8 @@ annotation: {
   path: 2
   path: 0
   sourceFile: test
-  begin: 2930
-  end: 2941
-}
-annotation: {
-  path: 4
-  path: 0
-  path: 2
-  path: 1
-  sourceFile: test
-  begin: 2999
-  end: 3003
+  begin: 3001
+  end: 3012
 }
 annotation: {
   path: 4
@@ -63,8 +54,8 @@ annotation: {
   path: 2
   path: 1
   sourceFile: test
-  begin: 3045
-  end: 3049
+  begin: 3070
+  end: 3074
 }
 annotation: {
   path: 4
@@ -72,8 +63,8 @@ annotation: {
   path: 2
   path: 1
   sourceFile: test
-  begin: 3124
-  end: 3131
+  begin: 3116
+  end: 3120
 }
 annotation: {
   path: 4
@@ -81,8 +72,17 @@ annotation: {
   path: 2
   path: 1
   sourceFile: test
-  begin: 3174
-  end: 3183
+  begin: 3195
+  end: 3202
+}
+annotation: {
+  path: 4
+  path: 0
+  path: 2
+  path: 1
+  sourceFile: test
+  begin: 3245
+  end: 3254
 }
 annotation: {
   path: 4
@@ -90,8 +90,8 @@ annotation: {
   path: 2
   path: 2
   sourceFile: test
-  begin: 3244
-  end: 3248
+  begin: 3315
+  end: 3319
 }
 annotation: {
   path: 4
@@ -99,8 +99,8 @@ annotation: {
   path: 2
   path: 2
   sourceFile: test
-  begin: 3295
-  end: 3299
+  begin: 3366
+  end: 3370
 }
 annotation: {
   path: 4
@@ -108,8 +108,8 @@ annotation: {
   path: 2
   path: 2
   sourceFile: test
-  begin: 3372
-  end: 3379
+  begin: 3443
+  end: 3450
 }
 annotation: {
   path: 4
@@ -117,6 +117,6 @@ annotation: {
   path: 2
   path: 2
   sourceFile: test
-  begin: 3422
-  end: 3431
+  begin: 3493
+  end: 3502
 }

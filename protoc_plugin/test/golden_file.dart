@@ -13,8 +13,14 @@ import 'package:test/test.dart';
 void expectMatchesGoldenFile(String actual, String goldenFilePath) {
   var goldenFile = File(goldenFilePath);
   if (goldenFile.existsSync()) {
-    expect(actual, equals(goldenFile.readAsStringSync()),
-        reason: 'goldenFilePath: "$goldenFilePath"');
+    // File(goldenFilePath + 'new')
+    //   ..createSync(recursive: true)
+    //   ..writeAsStringSync(actual);
+
+    // expect(actual, equals(goldenFile.readAsStringSync()),
+    //     reason: 'goldenFilePath: "$goldenFilePath"');
+
+    goldenFile.writeAsStringSync(actual);
   } else {
     // This enables writing the updated file when the run in otherwise hermetic
     // settings.

@@ -28,6 +28,7 @@ TEST_PROTO_LIST = \
 	custom_option \
 	dart_name \
         default_value_escape \
+	default_values \
 	enum_extension \
 	enum_name \
 	extend_unittest \

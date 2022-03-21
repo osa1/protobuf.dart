@@ -291,15 +291,15 @@ class ProtobufField {
     if (isRepeated) return 'null';
     switch (descriptor.type) {
       case FieldDescriptorProto_Type.TYPE_BOOL:
-        return _getDefaultAsBoolExpr('false');
+        return _getDefaultAsBoolExpr();
       case FieldDescriptorProto_Type.TYPE_INT32:
       case FieldDescriptorProto_Type.TYPE_UINT32:
       case FieldDescriptorProto_Type.TYPE_SINT32:
       case FieldDescriptorProto_Type.TYPE_FIXED32:
       case FieldDescriptorProto_Type.TYPE_SFIXED32:
-        return _getDefaultAsInt32Expr('0');
+        return _getDefaultAsInt32Expr();
       case FieldDescriptorProto_Type.TYPE_STRING:
-        return _getDefaultAsStringExpr("''");
+        return _getDefaultAsStringExpr();
       default:
         return 'null';
     }
@@ -313,14 +313,14 @@ class ProtobufField {
     assert(!isRepeated);
     switch (descriptor.type) {
       case FieldDescriptorProto_Type.TYPE_BOOL:
-        return _getDefaultAsBoolExpr(null);
+        return _getDefaultAsBoolExpr();
       case FieldDescriptorProto_Type.TYPE_FLOAT:
       case FieldDescriptorProto_Type.TYPE_DOUBLE:
         if (!descriptor.hasDefaultValue()) {
-          return null;
+          return '0.0';
         } else if ('0.0' == descriptor.defaultValue ||
             '0' == descriptor.defaultValue) {
-          return null;
+          return '0.0';
         } else if (descriptor.defaultValue == 'inf') {
           return '$coreImportPrefix.double.infinity';
         } else if (descriptor.defaultValue == '-inf') {
@@ -341,7 +341,7 @@ class ProtobufField {
       case FieldDescriptorProto_Type.TYPE_SINT32:
       case FieldDescriptorProto_Type.TYPE_FIXED32:
       case FieldDescriptorProto_Type.TYPE_SFIXED32:
-        return _getDefaultAsInt32Expr(null);
+        return _getDefaultAsInt32Expr();
       case FieldDescriptorProto_Type.TYPE_INT64:
       case FieldDescriptorProto_Type.TYPE_UINT64:
       case FieldDescriptorProto_Type.TYPE_SINT64:
@@ -352,10 +352,10 @@ class ProtobufField {
         if (value == '0') return '$_fixnumImportPrefix.Int64.ZERO';
         return "$protobufImportPrefix.parseLongInt('$value')";
       case FieldDescriptorProto_Type.TYPE_STRING:
-        return _getDefaultAsStringExpr(null);
+        return _getDefaultAsStringExpr();
       case FieldDescriptorProto_Type.TYPE_BYTES:
         if (!descriptor.hasDefaultValue() || descriptor.defaultValue.isEmpty) {
-          return null;
+          return '() => <$coreImportPrefix.int>[]';
         }
         var byteList = descriptor.defaultValue.codeUnits
             .map((b) => '0x${b.toRadixString(16)}')
@@ -373,32 +373,34 @@ class ProtobufField {
         } else if (gen._canonicalValues.isNotEmpty) {
           return '$className.${gen.dartNames[gen._canonicalValues[0].name]}';
         }
-        return null;
+        return 'null';
       default:
         throw _typeNotImplemented('generatedDefaultFunction');
     }
   }
 
-  String _getDefaultAsBoolExpr(String noDefault) {
-    if (descriptor.hasDefaultValue() && 'false' != descriptor.defaultValue) {
+  String _getDefaultAsBoolExpr() {
+    if (descriptor.hasDefaultValue()) {
       return descriptor.defaultValue;
+    } else {
+      return 'false';
     }
-    return noDefault;
   }
 
-  String _getDefaultAsStringExpr(String noDefault) {
-    if (!descriptor.hasDefaultValue() || descriptor.defaultValue.isEmpty) {
-      return noDefault;
+  String _getDefaultAsStringExpr() {
+    if (descriptor.hasDefaultValue()) {
+      return quoted(descriptor.defaultValue);
+    } else {
+      return "''";
     }
-
-    return quoted(descriptor.defaultValue);
   }
 
-  String _getDefaultAsInt32Expr(String noDefault) {
-    if (descriptor.hasDefaultValue() && '0' != descriptor.defaultValue) {
+  String _getDefaultAsInt32Expr() {
+    if (descriptor.hasDefaultValue()) {
       return descriptor.defaultValue;
+    } else {
+      return '0';
     }
-    return noDefault;
   }
 
   bool _hasBooleanOption(Extension extension) =>

@@ -1,9 +1,9 @@
 class PhoneNumber extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'PhoneNumber', createEmptyInstance: create)
-    ..aQS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'number')
+    ..a<$core.String>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'number', $pb.PbFieldType.QS, defaultOrMaker: '')
     ..e<PhoneNumber_PhoneType>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type', $pb.PbFieldType.OE, defaultOrMaker: PhoneNumber_PhoneType.MOBILE, valueOf: PhoneNumber_PhoneType.valueOf, enumValues: PhoneNumber_PhoneType.values)
     ..a<$core.String>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name', $pb.PbFieldType.OS, defaultOrMaker: '\$')
-    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deprecatedField')
+    ..a<$core.String>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deprecatedField', $pb.PbFieldType.OS, defaultOrMaker: '')
   ;
 
   PhoneNumber._() : super();
