@@ -4,7 +4,7 @@
 
 part of protobuf;
 
-Object? _writeToProto3Json(_FieldSet fs, TypeRegistry typeRegistry) {
+Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
   String? convertToMapKey(dynamic key, int keyType) {
     var baseType = PbFieldType._baseType(keyType);
 
@@ -37,7 +37,7 @@ Object? _writeToProto3Json(_FieldSet fs, TypeRegistry typeRegistry) {
 
     if (_isGroupOrMessage(fieldType!)) {
       return _writeToProto3Json(
-          (fieldValue as GeneratedMessage)._fieldSet, typeRegistry);
+          (fieldValue as GeneratedMessage).fieldSet, typeRegistry);
     } else if (_isEnum(fieldType)) {
       return (fieldValue as ProtobufEnum).name;
     } else {
@@ -124,7 +124,7 @@ extension _FindFirst<E> on Iterable<E> {
 
 void _mergeFromProto3Json(
     Object? json,
-    _FieldSet fieldSet,
+    FieldSet fieldSet,
     TypeRegistry typeRegistry,
     bool ignoreUnknownFields,
     bool supportNamesWithUnderscores,
@@ -132,7 +132,7 @@ void _mergeFromProto3Json(
   var context = JsonParsingContext(
       ignoreUnknownFields, supportNamesWithUnderscores, permissiveEnums);
 
-  void recursionHelper(Object? json, _FieldSet fieldSet) {
+  void recursionHelper(Object? json, FieldSet fieldSet) {
     int tryParse32Bit(String s) {
       return int.tryParse(s) ??
           (throw context.parseException('expected integer', s));
@@ -279,7 +279,7 @@ void _mergeFromProto3Json(
         case PbFieldType._GROUP_BIT:
         case PbFieldType._MESSAGE_BIT:
           var subMessage = fieldInfo.subBuilder!();
-          recursionHelper(value, subMessage._fieldSet);
+          recursionHelper(value, subMessage.fieldSet);
           return subMessage;
         default:
           throw StateError('Unknown type $fieldType');

@@ -47,7 +47,7 @@ bool _hashCodesCanBeMemoized = true;
 /// These fields and methods are in a separate class to avoid
 /// polymorphic access due to inheritance. This turns out to
 /// be faster when compiled to JavaScript.
-class _FieldSet {
+class FieldSet {
   final GeneratedMessage? _message;
   final EventPlugin? _eventPlugin;
 
@@ -73,7 +73,7 @@ class _FieldSet {
   /// code as an `int`.
   Object _frozenState = false;
 
-  /// The [BuilderInfo] for the [GeneratedMessage] this [_FieldSet] belongs to.
+  /// The [BuilderInfo] for the [GeneratedMessage] this [FieldSet] belongs to.
   ///
   /// WARNING: Avoid calling this for any performance critical code, instead
   /// obtain the [BuilderInfo] on the call site.
@@ -102,7 +102,7 @@ class _FieldSet {
   // index is not present, the oneof field is unset.
   final Map<int, int>? _oneofCases;
 
-  _FieldSet(this._message, BuilderInfo meta, this._eventPlugin)
+  FieldSet(this._message, BuilderInfo meta, this._eventPlugin)
       : _values = _makeValueList(meta.byIndex.length),
         _oneofCases = meta.oneofs.isEmpty ? null : <int, int>{};
 
@@ -590,7 +590,7 @@ class _FieldSet {
     if (_hasExtensions) _extensions!._clearValues();
   }
 
-  bool _equals(_FieldSet o) {
+  bool _equals(FieldSet o) {
     if (_meta != o._meta) return false;
     for (var i = 0; i < _values.length; i++) {
       if (!_equalFieldValues(_values[i], o._values[i])) return false;
@@ -712,7 +712,7 @@ class _FieldSet {
     void renderValue(key, value) {
       if (value is GeneratedMessage) {
         out.write('$indent$key: {\n');
-        value._fieldSet.writeString(out, '$indent  ');
+        value.fieldSet.writeString(out, '$indent  ');
         out.write('$indent}\n');
       } else if (value is MapEntry) {
         out.write('$indent$key: {${value.key} : ${value.value}} \n');
@@ -763,7 +763,7 @@ class _FieldSet {
   /// Singular fields that are set in [other] overwrite the corresponding fields
   /// in this message. Repeated fields are appended. Singular sub-messages are
   /// recursively merged.
-  void _mergeFromMessage(_FieldSet other) {
+  void _mergeFromMessage(FieldSet other) {
     // TODO(https://github.com/google/protobuf.dart/issues/60): Recognize
     // when `this` and [other] are the same protobuf (e.g. from cloning). In
     // this case, we can merge the non-extension fields without field lookups or
@@ -900,7 +900,7 @@ class _FieldSet {
   /// Makes a shallow copy of all values from [original] to this.
   ///
   /// Map fields and repeated fields are copied.
-  void _shallowCopyValues(_FieldSet original) {
+  void _shallowCopyValues(FieldSet original) {
     _values.setRange(0, original._values.length, original._values);
     final info = _meta;
     for (var index = 0; index < info.byIndex.length; index++) {

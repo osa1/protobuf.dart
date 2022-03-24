@@ -19,25 +19,25 @@ typedef ValueOfFunc = ProtobufEnum? Function(int value);
 /// GeneratedMessage_reservedNames and should be unlikely to be used in
 /// a proto file.
 abstract class GeneratedMessage {
-  _FieldSet? __fieldSet;
+  FieldSet? _fieldSet;
 
   @pragma('dart2js:tryInline')
-  _FieldSet get _fieldSet => __fieldSet!;
+  FieldSet get fieldSet => _fieldSet!;
 
   GeneratedMessage() {
-    __fieldSet = _FieldSet(this, info_, eventPlugin);
+    _fieldSet = FieldSet(this, info_, eventPlugin);
     if (eventPlugin != null) eventPlugin!.attach(this);
   }
 
   GeneratedMessage.fromBuffer(
       List<int> input, ExtensionRegistry extensionRegistry) {
-    __fieldSet = _FieldSet(this, info_, eventPlugin);
+    _fieldSet = FieldSet(this, info_, eventPlugin);
     if (eventPlugin != null) eventPlugin!.attach(this);
     mergeFromBuffer(input, extensionRegistry);
   }
 
   GeneratedMessage.fromJson(String input, ExtensionRegistry extensionRegistry) {
-    __fieldSet = _FieldSet(this, info_, eventPlugin);
+    _fieldSet = FieldSet(this, info_, eventPlugin);
     if (eventPlugin != null) eventPlugin!.attach(this);
     mergeFromJson(input, extensionRegistry);
   }
@@ -59,13 +59,13 @@ abstract class GeneratedMessage {
   /// Creates an empty instance of the same message type as this.
   GeneratedMessage createEmptyInstance();
 
-  UnknownFieldSet get unknownFields => _fieldSet._ensureUnknownFields();
+  UnknownFieldSet get unknownFields => fieldSet._ensureUnknownFields();
 
   /// Make this message read-only.
   ///
   /// Marks this message, and any sub-messages, as read-only.
   GeneratedMessage freeze() {
-    _fieldSet._markReadOnly();
+    fieldSet._markReadOnly();
     return this;
   }
 
@@ -74,7 +74,7 @@ abstract class GeneratedMessage {
   /// Even when `false`, some sub-message could be read-only.
   ///
   /// If `true` all sub-messages are frozen.
-  bool get isFrozen => _fieldSet._isReadOnly;
+  bool get isFrozen => fieldSet._isReadOnly;
 
   /// Returns a writable, shallow copy of this message.
   ///
@@ -89,7 +89,7 @@ abstract class GeneratedMessage {
   // lazily creates builders.
   GeneratedMessage toBuilder() {
     final result = createEmptyInstance();
-    result._fieldSet._shallowCopyValues(_fieldSet);
+    result.fieldSet._shallowCopyValues(fieldSet);
     return result;
   }
 
@@ -110,13 +110,13 @@ abstract class GeneratedMessage {
 
   /// Returns [:true:] if all required fields in the message and all embedded
   /// messages are set, false otherwise.
-  bool isInitialized() => _fieldSet._hasRequiredValues();
+  bool isInitialized() => fieldSet._hasRequiredValues();
 
   /// Clears all data that was set in this message.
   ///
   /// After calling [clear], [getField] will still return default values for
   /// unset fields.
-  void clear() => _fieldSet._clear();
+  void clear() => fieldSet._clear();
 
   // TODO(antonm): move to getters.
   int? getTagNumber(String fieldName) => info_.tagNumber(fieldName);
@@ -124,9 +124,7 @@ abstract class GeneratedMessage {
   @override
   bool operator ==(other) {
     if (identical(this, other)) return true;
-    return other is GeneratedMessage
-        ? _fieldSet._equals(other._fieldSet)
-        : false;
+    return other is GeneratedMessage ? fieldSet._equals(other.fieldSet) : false;
   }
 
   /// Calculates a hash code based on the contents of the protobuf.
@@ -134,7 +132,7 @@ abstract class GeneratedMessage {
   /// The hash may change when any field changes (recursively).
   /// Therefore, protobufs used as map keys shouldn't be changed.
   @override
-  int get hashCode => _fieldSet._hashCode;
+  int get hashCode => fieldSet._hashCode;
 
   /// Returns a String representation of this message.
   ///
@@ -153,14 +151,14 @@ abstract class GeneratedMessage {
   /// to compose debug strings with additional information.
   String toDebugString() {
     var out = StringBuffer();
-    _fieldSet.writeString(out, '');
+    fieldSet.writeString(out, '');
     return out.toString();
   }
 
   void check() {
     if (!isInitialized()) {
       var invalidFields = <String>[];
-      _fieldSet._appendInvalidFields(invalidFields, '');
+      fieldSet._appendInvalidFields(invalidFields, '');
       var missingFields = (invalidFields..sort()).join(', ');
       throw StateError('Message missing required fields: $missingFields');
     }
@@ -173,12 +171,12 @@ abstract class GeneratedMessage {
   }
 
   void writeToCodedBufferWriter(CodedBufferWriter output) =>
-      _writeToCodedBufferWriter(_fieldSet, output);
+      _writeToCodedBufferWriter(fieldSet, output);
 
   void mergeFromCodedBufferReader(CodedBufferReader input,
       [ExtensionRegistry extensionRegistry = ExtensionRegistry.EMPTY]) {
-    final meta = _fieldSet._meta;
-    _mergeFromCodedBufferReader(meta, _fieldSet, input, extensionRegistry);
+    final meta = fieldSet._meta;
+    _mergeFromCodedBufferReader(meta, fieldSet, input, extensionRegistry);
   }
 
   /// Merges serialized protocol buffer data into this message.
@@ -192,8 +190,8 @@ abstract class GeneratedMessage {
   void mergeFromBuffer(List<int> input,
       [ExtensionRegistry extensionRegistry = ExtensionRegistry.EMPTY]) {
     var codedInput = CodedBufferReader(input);
-    final meta = _fieldSet._meta;
-    _mergeFromCodedBufferReader(meta, _fieldSet, codedInput, extensionRegistry);
+    final meta = fieldSet._meta;
+    _mergeFromCodedBufferReader(meta, fieldSet, codedInput, extensionRegistry);
     codedInput.checkLastTagWas(0);
   }
 
@@ -202,7 +200,7 @@ abstract class GeneratedMessage {
   /// Returns the JSON encoding of this message as a Dart [Map].
   ///
   /// The encoding is described in [GeneratedMessage.writeToJson].
-  Map<String, dynamic> writeToJsonMap() => _writeToJsonMap(_fieldSet);
+  Map<String, dynamic> writeToJsonMap() => _writeToJsonMap(fieldSet);
 
   /// Returns a JSON string that encodes this message.
   ///
@@ -234,7 +232,7 @@ abstract class GeneratedMessage {
   /// error is thrown.
   Object? toProto3Json(
           {TypeRegistry typeRegistry = const TypeRegistry.empty()}) =>
-      _writeToProto3Json(_fieldSet, typeRegistry);
+      _writeToProto3Json(fieldSet, typeRegistry);
 
   /// Merges field values from [json], a JSON object using proto3 encoding.
   ///
@@ -267,7 +265,7 @@ abstract class GeneratedMessage {
           bool ignoreUnknownFields = false,
           bool supportNamesWithUnderscores = true,
           bool permissiveEnums = false}) =>
-      _mergeFromProto3Json(json, _fieldSet, typeRegistry, ignoreUnknownFields,
+      _mergeFromProto3Json(json, fieldSet, typeRegistry, ignoreUnknownFields,
           supportNamesWithUnderscores, permissiveEnums);
 
   /// Merges field values from [data], a JSON object, encoded as described by
@@ -282,7 +280,7 @@ abstract class GeneratedMessage {
     /// on the Dart VM for a slight speedup.
     final jsonMap =
         jsonDecode(data, reviver: _emptyReviver) as Map<String, dynamic>;
-    _mergeFromJsonMap(_fieldSet, jsonMap, extensionRegistry);
+    _mergeFromJsonMap(fieldSet, jsonMap, extensionRegistry);
   }
 
   static dynamic _emptyReviver(k, v) => v;
@@ -292,7 +290,7 @@ abstract class GeneratedMessage {
   /// The encoding is described in [GeneratedMessage.writeToJson].
   void mergeFromJsonMap(Map<String, dynamic> json,
       [ExtensionRegistry extensionRegistry = ExtensionRegistry.EMPTY]) {
-    _mergeFromJsonMap(_fieldSet, json, extensionRegistry);
+    _mergeFromJsonMap(fieldSet, json, extensionRegistry);
   }
 
   /// Adds an extension field value to a repeated field.
@@ -304,13 +302,13 @@ abstract class GeneratedMessage {
       throw ArgumentError(
           'Cannot add to a non-repeated field (use setExtension())');
     }
-    _fieldSet._ensureExtensions()._ensureRepeatedField(extension).add(value);
+    fieldSet._ensureExtensions()._ensureRepeatedField(extension).add(value);
   }
 
   /// Clears an extension field and also removes the extension.
   void clearExtension(Extension extension) {
-    if (_fieldSet._hasExtensions) {
-      _fieldSet._extensions!._clearFieldAndInfo(extension);
+    if (fieldSet._hasExtensions) {
+      fieldSet._extensions!._clearFieldAndInfo(extension);
     }
   }
 
@@ -318,22 +316,22 @@ abstract class GeneratedMessage {
   ///
   /// If it's an extension field, the Extension will be kept.
   /// The tagNumber should be a valid tag or extension.
-  void clearField(int tagNumber) => _fieldSet._clearField(tagNumber);
+  void clearField(int tagNumber) => fieldSet._clearField(tagNumber);
 
-  int $_whichOneof(int oneofIndex) => _fieldSet._oneofCases![oneofIndex] ?? 0;
+  int $_whichOneof(int oneofIndex) => fieldSet._oneofCases![oneofIndex] ?? 0;
 
-  bool extensionsAreInitialized() => _fieldSet._hasRequiredExtensionValues();
+  bool extensionsAreInitialized() => fieldSet._hasRequiredExtensionValues();
 
   /// Returns the value of [extension].
   ///
   /// If not set, returns the extension's default value.
   dynamic getExtension(Extension extension) {
-    return _fieldSet._ensureExtensions()._getFieldOrDefault(extension);
+    return fieldSet._ensureExtensions()._getFieldOrDefault(extension);
   }
 
   /// Returns the value of the field associated with [tagNumber], or the
   /// default value if it is not set.
-  dynamic getField(int tagNumber) => _fieldSet._getField(tagNumber);
+  dynamic getField(int tagNumber) => fieldSet._getField(tagNumber);
 
   /// Creates List implementing a mutable repeated field.
   ///
@@ -355,7 +353,7 @@ abstract class GeneratedMessage {
   /// For unset or cleared fields, returns null.
   /// Also returns null for unknown tag numbers.
   dynamic getFieldOrNull(int tagNumber) =>
-      _fieldSet._getFieldOrNullByTag(tagNumber);
+      fieldSet._getFieldOrNullByTag(tagNumber);
 
   /// Returns the default value for the given field.
   ///
@@ -363,15 +361,15 @@ abstract class GeneratedMessage {
   /// (unlike [getField]). For all other fields, returns
   /// the same thing that getField() would for a cleared field.
   dynamic getDefaultForField(int tagNumber) =>
-      _fieldSet._ensureInfo(tagNumber).readonlyDefault;
+      fieldSet._ensureInfo(tagNumber).readonlyDefault;
 
   /// Returns [:true:] if a value of [extension] is present.
   bool hasExtension(Extension extension) =>
-      _fieldSet._hasExtensions &&
-      _fieldSet._extensions!._getFieldOrNull(extension) != null;
+      fieldSet._hasExtensions &&
+      fieldSet._extensions!._getFieldOrNull(extension) != null;
 
   /// Returns [:true:] if this message has a field associated with [tagNumber].
-  bool hasField(int tagNumber) => _fieldSet._hasField(tagNumber);
+  bool hasField(int tagNumber) => fieldSet._hasField(tagNumber);
 
   /// Merges the contents of the [other] into this message.
   ///
@@ -380,20 +378,19 @@ abstract class GeneratedMessage {
   /// recursively merged.
   @pragma('dart2js:noInline')
   void mergeFromMessage(GeneratedMessage other) =>
-      _fieldSet._mergeFromMessage(other._fieldSet);
+      fieldSet._mergeFromMessage(other.fieldSet);
 
-  void mergeUnknownFields(UnknownFieldSet unknownFieldSet) => _fieldSet
-      ._ensureUnknownFields()
-      .mergeFromUnknownFieldSet(unknownFieldSet);
+  void mergeUnknownFields(UnknownFieldSet unknownFieldSet) =>
+      fieldSet._ensureUnknownFields().mergeFromUnknownFieldSet(unknownFieldSet);
 
   /// Sets the value of a non-repeated extension field to [value].
   void setExtension(Extension extension, Object value) {
     ArgumentError.checkNotNull(value, 'value');
     if (_isRepeated(extension.type)) {
-      throw ArgumentError(_fieldSet._setFieldFailedMessage(
+      throw ArgumentError(fieldSet._setFieldFailedMessage(
           extension, value, 'repeating field (use get + .add())'));
     }
-    _fieldSet._ensureExtensions()._setFieldAndInfo(extension, value);
+    fieldSet._ensureExtensions()._setFieldAndInfo(extension, value);
   }
 
   /// Sets the value of a field by its [tagNumber].
@@ -405,12 +402,12 @@ abstract class GeneratedMessage {
   /// it's current value, use [clearField] instead.
   @pragma('dart2js:noInline')
   void setField(int tagNumber, Object value) {
-    _fieldSet._setField(tagNumber, value);
+    fieldSet._setField(tagNumber, value);
   }
 
   /// For generated code only.
   T $_get<T>(int index, T defaultValue) =>
-      _fieldSet._$get<T>(index, defaultValue);
+      fieldSet._$get<T>(index, defaultValue);
 
   /// For generated code only.
   T $_getN<T>(int index) {
@@ -421,88 +418,88 @@ abstract class GeneratedMessage {
     //
     // TODO(sra): With NNDB we will need to add 'as T', and a dart2js annotation
     // (to be implemented) to omit the 'as' check.
-    return _fieldSet._$getND(index);
+    return fieldSet._$getND(index);
   }
 
   /// For generated code only.
   T $_ensure<T>(int index) {
-    return _fieldSet._$ensure<T>(index);
+    return fieldSet._$ensure<T>(index);
   }
 
   /// For generated code only.
-  List<T> $_getList<T>(int index) => _fieldSet._$getList<T>(index);
+  List<T> $_getList<T>(int index) => fieldSet._$getList<T>(index);
 
   /// For generated code only.
-  Map<K, V> $_getMap<K, V>(int index) => _fieldSet._$getMap<K, V>(this, index);
+  Map<K, V> $_getMap<K, V>(int index) => fieldSet._$getMap<K, V>(this, index);
 
   /// For generated code only.
   bool $_getB(int index, bool defaultValue) =>
-      _fieldSet._$getB(index, defaultValue);
+      fieldSet._$getB(index, defaultValue);
 
   /// For generated code only.
-  bool $_getBF(int index) => _fieldSet._$getBF(index);
+  bool $_getBF(int index) => fieldSet._$getBF(index);
 
   /// For generated code only.
   int $_getI(int index, int defaultValue) =>
-      _fieldSet._$getI(index, defaultValue);
+      fieldSet._$getI(index, defaultValue);
 
   /// For generated code only.
-  int $_getIZ(int index) => _fieldSet._$getIZ(index);
+  int $_getIZ(int index) => fieldSet._$getIZ(index);
 
   /// For generated code only.
   String $_getS(int index, String defaultValue) =>
-      _fieldSet._$getS(index, defaultValue);
+      fieldSet._$getS(index, defaultValue);
 
   /// For generated code only.
-  String $_getSZ(int index) => _fieldSet._$getSZ(index);
+  String $_getSZ(int index) => fieldSet._$getSZ(index);
 
   /// For generated code only.
-  Int64 $_getI64(int index) => _fieldSet._$getI64(index);
+  Int64 $_getI64(int index) => fieldSet._$getI64(index);
 
   /// For generated code only.
-  bool $_has(int index) => _fieldSet._$has(index);
+  bool $_has(int index) => fieldSet._$has(index);
 
   /// For generated code only.
-  void $_setBool(int index, bool value) => _fieldSet._$set(index, value);
+  void $_setBool(int index, bool value) => fieldSet._$set(index, value);
 
   /// For generated code only.
-  void $_setBytes(int index, List<int> value) => _fieldSet._$set(index, value);
+  void $_setBytes(int index, List<int> value) => fieldSet._$set(index, value);
 
   /// For generated code only.
-  void $_setString(int index, String value) => _fieldSet._$set(index, value);
+  void $_setString(int index, String value) => fieldSet._$set(index, value);
 
   /// For generated code only.
   void $_setFloat(int index, double value) {
     ArgumentError.checkNotNull(value, 'value');
     if (!_isFloat32(value)) {
-      _fieldSet._$check(index, value);
+      fieldSet._$check(index, value);
     }
-    _fieldSet._$set(index, value);
+    fieldSet._$set(index, value);
   }
 
   /// For generated code only.
-  void $_setDouble(int index, double value) => _fieldSet._$set(index, value);
+  void $_setDouble(int index, double value) => fieldSet._$set(index, value);
 
   /// For generated code only.
   void $_setSignedInt32(int index, int value) {
     ArgumentError.checkNotNull(value, 'value');
     if (!_isSigned32(value)) {
-      _fieldSet._$check(index, value);
+      fieldSet._$check(index, value);
     }
-    _fieldSet._$set(index, value);
+    fieldSet._$set(index, value);
   }
 
   /// For generated code only.
   void $_setUnsignedInt32(int index, int value) {
     ArgumentError.checkNotNull(value, 'value');
     if (!_isUnsigned32(value)) {
-      _fieldSet._$check(index, value);
+      fieldSet._$check(index, value);
     }
-    _fieldSet._$set(index, value);
+    fieldSet._$set(index, value);
   }
 
   /// For generated code only.
-  void $_setInt64(int index, Int64 value) => _fieldSet._$set(index, value);
+  void $_setInt64(int index, Int64 value) => fieldSet._$set(index, value);
 
   // Support for generating a read-only default singleton instance.
 

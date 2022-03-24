@@ -123,7 +123,7 @@ class FieldInfo<T> {
     if (!isRepeated) {
       // A required message: recurse.
       GeneratedMessage message = value;
-      return message._fieldSet._hasRequiredValues();
+      return message.fieldSet._hasRequiredValues();
     }
 
     List<GeneratedMessage> list = value;
@@ -131,10 +131,10 @@ class FieldInfo<T> {
 
     // For message types that (recursively) contain no required fields,
     // short-circuit the loop.
-    if (!list[0]._fieldSet._hasRequiredFields) return true;
+    if (!list[0].fieldSet._hasRequiredFields) return true;
 
     // Recurse on each item in the list.
-    return list.every((GeneratedMessage m) => m._fieldSet._hasRequiredValues());
+    return list.every((GeneratedMessage m) => m.fieldSet._hasRequiredValues());
   }
 
   /// Appends the dotted path to each required field that's missing a value.
@@ -146,19 +146,19 @@ class FieldInfo<T> {
     } else if (!isRepeated) {
       // Required message/group: recurse.
       GeneratedMessage message = value;
-      message._fieldSet._appendInvalidFields(problems, '$prefix$name.');
+      message.fieldSet._appendInvalidFields(problems, '$prefix$name.');
     } else {
       final list = value as List<GeneratedMessage>;
       if (list.isEmpty) return;
 
       // For message types that (recursively) contain no required fields,
       // short-circuit the loop.
-      if (!list[0]._fieldSet._hasRequiredFields) return;
+      if (!list[0].fieldSet._hasRequiredFields) return;
 
       // Recurse on each item in the list.
       var position = 0;
       for (var message in list) {
-        message._fieldSet
+        message.fieldSet
             ._appendInvalidFields(problems, '$prefix$name[$position].');
         position++;
       }
@@ -182,7 +182,7 @@ class FieldInfo<T> {
 
   /// Convenience method to thread this FieldInfo's reified type parameter to
   /// _FieldSet._ensureRepeatedField.
-  List<T?> _ensureRepeatedField(BuilderInfo meta, _FieldSet fs) {
+  List<T?> _ensureRepeatedField(BuilderInfo meta, FieldSet fs) {
     return fs._ensureRepeatedField<T>(meta, this);
   }
 
@@ -233,7 +233,7 @@ class MapFieldInfo<K, V> extends FieldInfo<PbMap<K, V>?> {
   FieldInfo get valueFieldInfo =>
       mapEntryBuilderInfo.fieldInfo[PbMap._valueFieldNumber]!;
 
-  Map<K, V> _ensureMapField(BuilderInfo meta, _FieldSet fs) {
+  Map<K, V> _ensureMapField(BuilderInfo meta, FieldSet fs) {
     return fs._ensureMapField<K, V>(meta, this);
   }
 

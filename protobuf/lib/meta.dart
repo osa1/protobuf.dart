@@ -25,6 +25,7 @@ const GeneratedMessage_reservedNames = <String>[
   'createRepeatedField',
   'eventPlugin',
   'extensionsAreInitialized',
+  'fieldSet',
   'freeze',
   'fromBuffer',
   'fromJson',
