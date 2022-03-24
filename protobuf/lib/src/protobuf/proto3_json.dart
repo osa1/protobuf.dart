@@ -11,21 +11,21 @@ Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
     assert(!_isRepeated(keyType));
 
     switch (baseType) {
-      case PbFieldType._BOOL_BIT:
+      case PbFieldType.BOOL_BIT:
         return key ? 'true' : 'false';
-      case PbFieldType._STRING_BIT:
+      case PbFieldType.STRING_BIT:
         return key;
-      case PbFieldType._UINT64_BIT:
+      case PbFieldType.UINT64_BIT:
         return (key as Int64).toStringUnsigned();
-      case PbFieldType._INT32_BIT:
-      case PbFieldType._SINT32_BIT:
-      case PbFieldType._UINT32_BIT:
-      case PbFieldType._FIXED32_BIT:
-      case PbFieldType._SFIXED32_BIT:
-      case PbFieldType._INT64_BIT:
-      case PbFieldType._SINT64_BIT:
-      case PbFieldType._SFIXED64_BIT:
-      case PbFieldType._FIXED64_BIT:
+      case PbFieldType.INT32_BIT:
+      case PbFieldType.SINT32_BIT:
+      case PbFieldType.UINT32_BIT:
+      case PbFieldType.FIXED32_BIT:
+      case PbFieldType.SFIXED32_BIT:
+      case PbFieldType.INT64_BIT:
+      case PbFieldType.SINT64_BIT:
+      case PbFieldType.SFIXED64_BIT:
+      case PbFieldType.FIXED64_BIT:
         return key.toString();
       default:
         throw StateError('Not a valid key type $keyType');
@@ -43,23 +43,23 @@ Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
     } else {
       var baseType = PbFieldType._baseType(fieldType);
       switch (baseType) {
-        case PbFieldType._BOOL_BIT:
+        case PbFieldType.BOOL_BIT:
           return fieldValue ? true : false;
-        case PbFieldType._STRING_BIT:
+        case PbFieldType.STRING_BIT:
           return fieldValue;
-        case PbFieldType._INT32_BIT:
-        case PbFieldType._SINT32_BIT:
-        case PbFieldType._UINT32_BIT:
-        case PbFieldType._FIXED32_BIT:
-        case PbFieldType._SFIXED32_BIT:
+        case PbFieldType.INT32_BIT:
+        case PbFieldType.SINT32_BIT:
+        case PbFieldType.UINT32_BIT:
+        case PbFieldType.FIXED32_BIT:
+        case PbFieldType.SFIXED32_BIT:
           return fieldValue;
-        case PbFieldType._INT64_BIT:
-        case PbFieldType._SINT64_BIT:
-        case PbFieldType._SFIXED64_BIT:
-        case PbFieldType._FIXED64_BIT:
+        case PbFieldType.INT64_BIT:
+        case PbFieldType.SINT64_BIT:
+        case PbFieldType.SFIXED64_BIT:
+        case PbFieldType.FIXED64_BIT:
           return fieldValue.toString();
-        case PbFieldType._FLOAT_BIT:
-        case PbFieldType._DOUBLE_BIT:
+        case PbFieldType.FLOAT_BIT:
+        case PbFieldType.DOUBLE_BIT:
           double value = fieldValue;
           if (value.isNaN) return 'NaN';
           if (value.isInfinite) {
@@ -70,9 +70,9 @@ Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
             }
           }
           return value;
-        case PbFieldType._UINT64_BIT:
+        case PbFieldType.UINT64_BIT:
           return (fieldValue as Int64).toStringUnsigned();
-        case PbFieldType._BYTES_BIT:
+        case PbFieldType.BYTES_BIT:
           return base64Encode(fieldValue);
         default:
           throw StateError(
@@ -87,8 +87,8 @@ Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
   }
 
   var result = <String, dynamic>{};
-  for (var fieldInfo in fs._infosSortedByTag) {
-    var value = fs._values[fieldInfo.index!];
+  for (var fieldInfo in fs.infosSortedByTag) {
+    var value = fs.values[fieldInfo.index!];
     if (value == null || (value is List && value.isEmpty)) {
       continue; // It's missing, repeated, or an empty byte array.
     }
@@ -168,12 +168,12 @@ void _mergeFromProto3Json(
       }
       var fieldType = fieldInfo.type;
       switch (PbFieldType._baseType(fieldType)) {
-        case PbFieldType._BOOL_BIT:
+        case PbFieldType.BOOL_BIT:
           if (value is bool) {
             return value;
           }
           throw context.parseException('Expected bool value', json);
-        case PbFieldType._BYTES_BIT:
+        case PbFieldType.BYTES_BIT:
           if (value is String) {
             Uint8List result;
             try {
@@ -186,13 +186,13 @@ void _mergeFromProto3Json(
           }
           throw context.parseException(
               'Expected bytes encoded as base64 String', value);
-        case PbFieldType._STRING_BIT:
+        case PbFieldType.STRING_BIT:
           if (value is String) {
             return value;
           }
           throw context.parseException('Expected String value', value);
-        case PbFieldType._FLOAT_BIT:
-        case PbFieldType._DOUBLE_BIT:
+        case PbFieldType.FLOAT_BIT:
+        case PbFieldType.DOUBLE_BIT:
           if (value is double) {
             return value;
           } else if (value is num) {
@@ -204,7 +204,7 @@ void _mergeFromProto3Json(
           }
           throw context.parseException(
               'Expected a double represented as a String or number', value);
-        case PbFieldType._ENUM_BIT:
+        case PbFieldType.ENUM_BIT:
           if (value is String) {
             // TODO(sigurdm): Do we want to avoid linear search here? Measure...
             final result = permissiveEnums
@@ -222,7 +222,7 @@ void _mergeFromProto3Json(
           }
           throw context.parseException(
               'Expected enum as a string or integer', value);
-        case PbFieldType._UINT32_BIT:
+        case PbFieldType.UINT32_BIT:
           int result;
           if (value is int) {
             result = value;
@@ -233,10 +233,10 @@ void _mergeFromProto3Json(
                 'Expected int or stringified int', value);
           }
           return check32BitUnsigned(result);
-        case PbFieldType._INT32_BIT:
-        case PbFieldType._SINT32_BIT:
-        case PbFieldType._FIXED32_BIT:
-        case PbFieldType._SFIXED32_BIT:
+        case PbFieldType.INT32_BIT:
+        case PbFieldType.SINT32_BIT:
+        case PbFieldType.FIXED32_BIT:
+        case PbFieldType.SFIXED32_BIT:
           int result;
           if (value is int) {
             result = value;
@@ -248,7 +248,7 @@ void _mergeFromProto3Json(
           }
           check32BitSigned(result);
           return result;
-        case PbFieldType._UINT64_BIT:
+        case PbFieldType.UINT64_BIT:
           Int64 result;
           if (value is int) {
             result = Int64(value);
@@ -259,10 +259,10 @@ void _mergeFromProto3Json(
                 'Expected int or stringified int', value);
           }
           return result;
-        case PbFieldType._INT64_BIT:
-        case PbFieldType._SINT64_BIT:
-        case PbFieldType._FIXED64_BIT:
-        case PbFieldType._SFIXED64_BIT:
+        case PbFieldType.INT64_BIT:
+        case PbFieldType.SINT64_BIT:
+        case PbFieldType.FIXED64_BIT:
+        case PbFieldType.SFIXED64_BIT:
           if (value is int) return Int64(value);
           if (value is String) {
             Int64 result;
@@ -276,8 +276,8 @@ void _mergeFromProto3Json(
           }
           throw context.parseException(
               'Expected int or stringified int', value);
-        case PbFieldType._GROUP_BIT:
-        case PbFieldType._MESSAGE_BIT:
+        case PbFieldType.GROUP_BIT:
+        case PbFieldType.MESSAGE_BIT:
           var subMessage = fieldInfo.subBuilder!();
           recursionHelper(value, subMessage.fieldSet);
           return subMessage;
@@ -288,7 +288,7 @@ void _mergeFromProto3Json(
 
     Object decodeMapKey(String key, int fieldType) {
       switch (PbFieldType._baseType(fieldType)) {
-        case PbFieldType._BOOL_BIT:
+        case PbFieldType.BOOL_BIT:
           switch (key) {
             case 'true':
               return true;
@@ -300,23 +300,23 @@ void _mergeFromProto3Json(
           }
           // ignore: dead_code
           throw StateError('(Should have been) unreachable statement');
-        case PbFieldType._STRING_BIT:
+        case PbFieldType.STRING_BIT:
           return key;
-        case PbFieldType._UINT64_BIT:
+        case PbFieldType.UINT64_BIT:
           // TODO(sigurdm): We do not throw on negative values here.
           // That would probably require going via bignum.
           return tryParse64Bit(key);
-        case PbFieldType._INT64_BIT:
-        case PbFieldType._SINT64_BIT:
-        case PbFieldType._SFIXED64_BIT:
-        case PbFieldType._FIXED64_BIT:
+        case PbFieldType.INT64_BIT:
+        case PbFieldType.SINT64_BIT:
+        case PbFieldType.SFIXED64_BIT:
+        case PbFieldType.FIXED64_BIT:
           return tryParse64Bit(key);
-        case PbFieldType._INT32_BIT:
-        case PbFieldType._SINT32_BIT:
-        case PbFieldType._FIXED32_BIT:
-        case PbFieldType._SFIXED32_BIT:
+        case PbFieldType.INT32_BIT:
+        case PbFieldType.SINT32_BIT:
+        case PbFieldType.FIXED32_BIT:
+        case PbFieldType.SFIXED32_BIT:
           return check32BitSigned(tryParse32Bit(key));
-        case PbFieldType._UINT32_BIT:
+        case PbFieldType.UINT32_BIT:
           return check32BitUnsigned(tryParse32Bit(key));
         default:
           throw StateError('Not a valid key type $fieldType');
@@ -394,7 +394,7 @@ void _mergeFromProto3Json(
             // merging.
             var parsedSubMessage =
                 convertProto3JsonValue(value, fieldInfo) as GeneratedMessage;
-            GeneratedMessage? original = fieldSet._values[fieldInfo.index!];
+            GeneratedMessage? original = fieldSet.values[fieldInfo.index!];
             if (original == null) {
               fieldSet._setNonExtensionFieldUnchecked(
                   meta, fieldInfo, parsedSubMessage);

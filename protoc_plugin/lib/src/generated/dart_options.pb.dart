@@ -15,7 +15,7 @@ class DartMixin extends $pb.GeneratedMessage {
           ? ''
           : 'DartMixin',
       package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'dart_options'),
       createEmptyInstance: create)
@@ -123,7 +123,7 @@ class Imports extends $pb.GeneratedMessage {
           ? ''
           : 'Imports',
       package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'dart_options'),
       createEmptyInstance: create)

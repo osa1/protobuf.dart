@@ -55,4 +55,4 @@ Int64 parseLongInt(String text) {
   return Int64.parseInt(text);
 }
 
-const _utf8 = Utf8Codec(allowMalformed: true);
+const utf8 = Utf8Codec(allowMalformed: true);

@@ -231,7 +231,7 @@ class MapFieldInfo<K, V> extends FieldInfo<PbMap<K, V>?> {
   }
 
   FieldInfo get valueFieldInfo =>
-      mapEntryBuilderInfo.fieldInfo[PbMap._valueFieldNumber]!;
+      mapEntryBuilderInfo.fieldInfo[PbMap.valueFieldNumber]!;
 
   Map<K, V> _ensureMapField(BuilderInfo meta, FieldSet fs) {
     return fs._ensureMapField<K, V>(meta, this);

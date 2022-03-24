@@ -4,21 +4,8 @@
 
 // ignore_for_file: constant_identifier_names
 
-part of protobuf;
+part of protobuf_serializers;
 
-/// Writer used for converting [GeneratedMessage]s into binary
-/// representation.
-///
-/// Note that it is impossible to serialize protobuf messages using a one pass
-/// streaming serialization as some values are serialized using
-/// length-delimited representation, which means that they are represented as
-/// a varint encoded length followed by specified number of bytes of data.
-///
-/// Due to this [CodedBufferWriter] maintains two output buffers:
-/// [_outputChunks] which contains all continuously written bytes and
-/// [_splices] which describes additional bytes to splice in-between
-/// [_outputChunks] bytes.
-///
 class CodedBufferWriter {
   /// Array of splices representing the data written into the writer.
   /// Each element might be one of:

@@ -104,9 +104,9 @@ T _reparseMessage<T extends GeneratedMessage>(
 
   UnknownFieldSet? resultUnknownFields;
   UnknownFieldSet ensureUnknownFields() =>
-      resultUnknownFields ??= ensureResult().fieldSet._unknownFields!;
+      resultUnknownFields ??= ensureResult().fieldSet.unknownFields!;
 
-  var messageUnknownFields = message.fieldSet._unknownFields;
+  var messageUnknownFields = message.fieldSet.unknownFields;
   if (messageUnknownFields != null) {
     var codedBufferWriter = CodedBufferWriter();
     extensionRegistry._extensions[message.info_.qualifiedMessageName]
@@ -127,14 +127,14 @@ T _reparseMessage<T extends GeneratedMessage>(
   for (var field in message.fieldSet._meta.byIndex) {
     PbList? resultEntries;
     PbList ensureEntries() =>
-        resultEntries ??= ensureResult().fieldSet._values[field.index!];
+        resultEntries ??= ensureResult().fieldSet.values[field.index!];
 
     PbMap? resultMap;
     PbMap ensureMap() =>
-        resultMap ??= ensureResult().fieldSet._values[field.index!];
+        resultMap ??= ensureResult().fieldSet.values[field.index!];
 
     if (field.isRepeated) {
-      final messageEntries = message.fieldSet._values[field.index!];
+      final messageEntries = message.fieldSet.values[field.index!];
       if (messageEntries == null) continue;
       if (field.isGroupOrMessage) {
         for (var i = 0; i < messageEntries.length; i++) {
@@ -146,7 +146,7 @@ T _reparseMessage<T extends GeneratedMessage>(
         }
       }
     } else if (field is MapFieldInfo) {
-      final messageMap = message.fieldSet._values[field.index!];
+      final messageMap = message.fieldSet.values[field.index!];
       if (messageMap == null) continue;
       if (_isGroupOrMessage(field.valueFieldType!)) {
         for (var key in messageMap.keys) {
@@ -158,12 +158,12 @@ T _reparseMessage<T extends GeneratedMessage>(
         }
       }
     } else if (field.isGroupOrMessage) {
-      final messageSubField = message.fieldSet._values[field.index!];
+      final messageSubField = message.fieldSet.values[field.index!];
       if (messageSubField == null) continue;
       final reparsedSubField =
           _reparseMessage<GeneratedMessage>(messageSubField, extensionRegistry);
       if (!identical(messageSubField, reparsedSubField)) {
-        ensureResult().fieldSet._values[field.index!] = reparsedSubField;
+        ensureResult().fieldSet.values[field.index!] = reparsedSubField;
       }
     }
   }

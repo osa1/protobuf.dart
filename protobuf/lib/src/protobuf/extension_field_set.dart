@@ -4,15 +4,15 @@
 
 part of protobuf;
 
-class _ExtensionFieldSet {
+class ExtensionFieldSet {
   final FieldSet _parent;
   final Map<int, Extension> _info = <int, Extension>{};
   final Map<int, dynamic> _values = <int, dynamic>{};
   bool _isReadOnly = false;
 
-  _ExtensionFieldSet(this._parent);
+  ExtensionFieldSet(this._parent);
 
-  Extension? _getInfoOrNull(int? tagNumber) => _info[tagNumber];
+  Extension? getInfoOrNull(int? tagNumber) => _info[tagNumber];
 
   dynamic _getFieldOrDefault(Extension fi) {
     if (fi.isRepeated) return _getList(fi);
@@ -20,7 +20,7 @@ class _ExtensionFieldSet {
     // TODO(skybrian) seems unnecessary to add info?
     // I think this was originally here for repeated extensions.
     _addInfoUnchecked(fi);
-    var value = _getFieldOrNull(fi);
+    var value = getFieldOrNull(fi);
     if (value == null) {
       _checkNotInUnknown(fi);
       return fi.makeDefault!();
@@ -66,7 +66,7 @@ class _ExtensionFieldSet {
     return newList;
   }
 
-  dynamic _getFieldOrNull(Extension extension) => _values[extension.tagNumber];
+  dynamic getFieldOrNull(Extension extension) => _values[extension.tagNumber];
 
   void _clearFieldAndInfo(Extension fi) {
     _clearField(fi);
@@ -83,7 +83,7 @@ class _ExtensionFieldSet {
   /// Sets a value for a non-repeated extension that has already been added.
   /// Does error-checking.
   void _setField(int tagNumber, value) {
-    var fi = _getInfoOrNull(tagNumber);
+    var fi = getInfoOrNull(tagNumber);
     if (fi == null) {
       throw ArgumentError(
           'tag $tagNumber not defined in $_parent._messageName');
@@ -137,12 +137,12 @@ class _ExtensionFieldSet {
 
   // Bulk operations
 
-  Iterable<int> get _tagNumbers => _values.keys;
+  Iterable<int> get tagNumbers => _values.keys;
   Iterable<Extension> get _infos => _info.values;
 
   bool get _hasValues => _values.isNotEmpty;
 
-  bool _equalValues(_ExtensionFieldSet? other) =>
+  bool _equalValues(ExtensionFieldSet? other) =>
       other != null && _areMapsEqual(_values, other._values);
 
   void _clearValues() => _values.clear();
@@ -151,12 +151,12 @@ class _ExtensionFieldSet {
   ///
   /// Repeated fields are copied.
   /// Extensions cannot contain map fields.
-  void _shallowCopyValues(_ExtensionFieldSet original) {
-    for (var tagNumber in original._tagNumbers) {
-      var extension = original._getInfoOrNull(tagNumber)!;
+  void _shallowCopyValues(ExtensionFieldSet original) {
+    for (var tagNumber in original.tagNumbers) {
+      var extension = original.getInfoOrNull(tagNumber)!;
       _addInfoUnchecked(extension);
 
-      final value = original._getFieldOrNull(extension);
+      final value = original.getFieldOrNull(extension);
       if (value == null) continue;
       if (extension.isRepeated) {
         assert(value is PbListBase);
@@ -190,8 +190,8 @@ class _ExtensionFieldSet {
   }
 
   void _checkNotInUnknown(Extension extension) {
-    if (_parent._hasUnknownFields &&
-        _parent._unknownFields!.hasField(extension.tagNumber)) {
+    if (_parent.hasUnknownFields &&
+        _parent.unknownFields!.hasField(extension.tagNumber)) {
       throw StateError(
           'Trying to get $extension that is present as an unknown field. '
           'Parse the message with this extension in the extension registry or '

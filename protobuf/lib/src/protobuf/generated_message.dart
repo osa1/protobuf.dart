@@ -307,8 +307,8 @@ abstract class GeneratedMessage {
 
   /// Clears an extension field and also removes the extension.
   void clearExtension(Extension extension) {
-    if (fieldSet._hasExtensions) {
-      fieldSet._extensions!._clearFieldAndInfo(extension);
+    if (fieldSet.hasExtensions) {
+      fieldSet.extensions!._clearFieldAndInfo(extension);
     }
   }
 
@@ -365,8 +365,8 @@ abstract class GeneratedMessage {
 
   /// Returns [:true:] if a value of [extension] is present.
   bool hasExtension(Extension extension) =>
-      fieldSet._hasExtensions &&
-      fieldSet._extensions!._getFieldOrNull(extension) != null;
+      fieldSet.hasExtensions &&
+      fieldSet.extensions!.getFieldOrNull(extension) != null;
 
   /// Returns [:true:] if this message has a field associated with [tagNumber].
   bool hasField(int tagNumber) => fieldSet._hasField(tagNumber);

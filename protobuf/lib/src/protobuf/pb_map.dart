@@ -8,8 +8,8 @@ class PbMap<K, V> extends MapBase<K, V> {
   final int? keyFieldType;
   final int? valueFieldType;
 
-  static const int _keyFieldNumber = 1;
-  static const int _valueFieldNumber = 2;
+  static const int keyFieldNumber = 1;
+  static const int valueFieldNumber = 2;
 
   final Map<K, V> _wrappedMap;
 
@@ -100,10 +100,9 @@ class PbMap<K, V> extends MapBase<K, V> {
     _mergeFromCodedBufferReader(mapEntryMeta, entryFieldSet, input, registry!);
     input.checkLastTagWas(0);
     input._currentLimit = oldLimit;
-    var key =
-        entryFieldSet._values[0] ?? mapEntryMeta.byIndex[0].makeDefault!();
+    var key = entryFieldSet.values[0] ?? mapEntryMeta.byIndex[0].makeDefault!();
     var value =
-        entryFieldSet._values[1] ?? mapEntryMeta.byIndex[1].makeDefault!();
+        entryFieldSet.values[1] ?? mapEntryMeta.byIndex[1].makeDefault!();
     _wrappedMap[key] = value;
   }
 
