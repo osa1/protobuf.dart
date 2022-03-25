@@ -80,22 +80,22 @@ class CodedBufferReader {
     var number = getTagFieldNumber(tag);
     switch (getTagWireType(tag)) {
       case WIRETYPE_VARINT:
-        // mergeVarintField(number, input.readInt64());
+        // mergeVarintField(number, input.readInt64()); TODO
         return true;
       case WIRETYPE_FIXED64:
-        // mergeFixed64Field(number, input.readFixed64());
+        // mergeFixed64Field(number, input.readFixed64()); TODO
         return true;
       case WIRETYPE_LENGTH_DELIMITED:
-        // mergeLengthDelimitedField(number, input.readBytes());
+        // mergeLengthDelimitedField(number, input.readBytes()); TODO
         return true;
       case WIRETYPE_START_GROUP:
-        // var subGroup = input.readUnknownFieldSetGroup(number);
+        // var subGroup = input.readUnknownFieldSetGroup(number); TODO
         // mergeGroupField(number, subGroup);
         return true;
       case WIRETYPE_END_GROUP:
         return false;
       case WIRETYPE_FIXED32:
-        // mergeFixed32Field(number, input.readFixed32());
+        // mergeFixed32Field(number, input.readFixed32()); TODO
         return true;
       default:
         throw InvalidProtocolBufferException.invalidWireType();
@@ -106,6 +106,27 @@ class CodedBufferReader {
       int number, Int64 value, UnknownFieldSet unknownFieldSet) {
     unknownFieldSet.ensureWritable('mergeVarintField');
     unknownFieldSet.getFieldOrDefault(number).addVarint(value);
+  }
+
+  void _mergeEntryFieldSet(BuilderInfo mapEntryMeta, FieldSet entryFieldSet,
+      ExtensionRegistry registry) {
+// TODO
+  }
+
+  void _mergeMapEntry(BuilderInfo mapEntryMeta, PbMap map,
+      [ExtensionRegistry? registry]) {
+    var length = readInt32();
+    var oldLimit = _currentLimit;
+    _currentLimit = _bufferPos + length;
+    final entryFieldSet = FieldSet(null, mapEntryMeta, null);
+    // _mergeFromCodedBufferReader(mapEntryMeta, entryFieldSet, input, registry!);
+    _mergeEntryFieldSet(mapEntryMeta, entryFieldSet, registry!);
+    checkLastTagWas(0);
+    _currentLimit = oldLimit;
+    var key = entryFieldSet.values[0] ?? mapEntryMeta.byIndex[0].makeDefault!();
+    var value =
+        entryFieldSet.values[1] ?? mapEntryMeta.byIndex[1].makeDefault!();
+    map.wrappedMap[key] = value;
   }
 
   void readGroup(int fieldNumber, GeneratedMessage message,

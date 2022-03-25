@@ -10,7 +10,7 @@ part of protobuf;
 /// For enums, group, and message fields, this check is only approximate,
 /// because the exact type isn't included in [fieldType].
 String? _getFieldError(int fieldType, var value) {
-  switch (PbFieldType._baseType(fieldType)) {
+  switch (PbFieldType.baseType(fieldType)) {
     case PbFieldType.BOOL_BIT:
       if (value is! bool) return 'not type bool';
       return null;

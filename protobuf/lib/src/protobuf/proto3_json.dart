@@ -6,7 +6,7 @@ part of protobuf;
 
 Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
   String? convertToMapKey(dynamic key, int keyType) {
-    var baseType = PbFieldType._baseType(keyType);
+    var baseType = PbFieldType.baseType(keyType);
 
     assert(!_isRepeated(keyType));
 
@@ -41,7 +41,7 @@ Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
     } else if (_isEnum(fieldType)) {
       return (fieldValue as ProtobufEnum).name;
     } else {
-      var baseType = PbFieldType._baseType(fieldType);
+      var baseType = PbFieldType.baseType(fieldType);
       switch (baseType) {
         case PbFieldType.BOOL_BIT:
           return fieldValue ? true : false;
@@ -167,7 +167,7 @@ void _mergeFromProto3Json(
         return fieldInfo.makeDefault!();
       }
       var fieldType = fieldInfo.type;
-      switch (PbFieldType._baseType(fieldType)) {
+      switch (PbFieldType.baseType(fieldType)) {
         case PbFieldType.BOOL_BIT:
           if (value is bool) {
             return value;
@@ -287,7 +287,7 @@ void _mergeFromProto3Json(
     }
 
     Object decodeMapKey(String key, int fieldType) {
-      switch (PbFieldType._baseType(fieldType)) {
+      switch (PbFieldType.baseType(fieldType)) {
         case PbFieldType.BOOL_BIT:
           switch (key) {
             case 'true':
@@ -360,7 +360,7 @@ void _mergeFromProto3Json(
           if (_isMapField(fieldInfo.type)) {
             if (value is Map) {
               final mapFieldInfo = fieldInfo as MapFieldInfo<dynamic, dynamic>;
-              final Map fieldValues = fieldSet._ensureMapField(info, fieldInfo);
+              final Map fieldValues = fieldSet.ensureMapField(info, fieldInfo);
               value.forEach((subKey, subValue) {
                 if (subKey is! String) {
                   throw context.parseException('Expected a String key', subKey);
@@ -377,9 +377,9 @@ void _mergeFromProto3Json(
           } else if (_isRepeated(fieldInfo.type)) {
             if (value == null) {
               // `null` is accepted as the empty list [].
-              fieldSet._ensureRepeatedField(info, fieldInfo);
+              fieldSet.ensureRepeatedField(info, fieldInfo);
             } else if (value is List) {
-              var values = fieldSet._ensureRepeatedField(info, fieldInfo);
+              var values = fieldSet.ensureRepeatedField(info, fieldInfo);
               for (var i = 0; i < value.length; i++) {
                 final entry = value[i];
                 context.addListIndex(i);
@@ -402,7 +402,7 @@ void _mergeFromProto3Json(
               original.mergeFromMessage(parsedSubMessage);
             }
           } else {
-            fieldSet._setFieldUnchecked(
+            fieldSet.setFieldUnchecked(
                 info, fieldInfo, convertProto3JsonValue(value, fieldInfo));
           }
           context.popIndex();

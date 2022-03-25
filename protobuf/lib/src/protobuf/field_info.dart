@@ -183,7 +183,7 @@ class FieldInfo<T> {
   /// Convenience method to thread this FieldInfo's reified type parameter to
   /// _FieldSet._ensureRepeatedField.
   List<T?> _ensureRepeatedField(BuilderInfo meta, FieldSet fs) {
-    return fs._ensureRepeatedField<T>(meta, this);
+    return fs.ensureRepeatedField<T>(meta, this);
   }
 
   @override
@@ -234,7 +234,7 @@ class MapFieldInfo<K, V> extends FieldInfo<PbMap<K, V>?> {
       mapEntryBuilderInfo.fieldInfo[PbMap.valueFieldNumber]!;
 
   Map<K, V> _ensureMapField(BuilderInfo meta, FieldSet fs) {
-    return fs._ensureMapField<K, V>(meta, this);
+    return fs.ensureMapField<K, V>(meta, this);
   }
 
   Map<K, V> _createMapField(GeneratedMessage m) {

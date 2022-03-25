@@ -24,7 +24,7 @@ int makeTag(int fieldNumber, int tag) => (fieldNumber << TAG_TYPE_BITS) | tag;
 
 /// Returns true if the wireType can be merged into the given fieldType.
 bool _wireTypeMatches(int fieldType, int wireType) {
-  switch (PbFieldType._baseType(fieldType)) {
+  switch (PbFieldType.baseType(fieldType)) {
     case PbFieldType.BOOL_BIT:
     case PbFieldType.ENUM_BIT:
     case PbFieldType.INT32_BIT:

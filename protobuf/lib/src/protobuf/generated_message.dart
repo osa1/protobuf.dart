@@ -59,7 +59,7 @@ abstract class GeneratedMessage {
   /// Creates an empty instance of the same message type as this.
   GeneratedMessage createEmptyInstance();
 
-  UnknownFieldSet get unknownFields => fieldSet._ensureUnknownFields();
+  UnknownFieldSet get unknownFields => fieldSet.ensureUnknownFields();
 
   /// Make this message read-only.
   ///
@@ -381,7 +381,7 @@ abstract class GeneratedMessage {
       fieldSet._mergeFromMessage(other.fieldSet);
 
   void mergeUnknownFields(UnknownFieldSet unknownFieldSet) =>
-      fieldSet._ensureUnknownFields().mergeFromUnknownFieldSet(unknownFieldSet);
+      fieldSet.ensureUnknownFields().mergeFromUnknownFieldSet(unknownFieldSet);
 
   /// Sets the value of a non-repeated extension field to [value].
   void setExtension(Extension extension, Object value) {

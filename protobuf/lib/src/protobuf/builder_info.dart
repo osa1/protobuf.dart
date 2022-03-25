@@ -285,7 +285,7 @@ class BuilderInfo {
       ..sort((FieldInfo a, FieldInfo b) => a.tagNumber.compareTo(b.tagNumber));
   }
 
-  GeneratedMessage _makeEmptyMessage(
+  GeneratedMessage makeEmptyMessage(
       int tagNumber, ExtensionRegistry? extensionRegistry) {
     var subBuilderFunc = subBuilder(tagNumber);
     if (subBuilderFunc == null && extensionRegistry != null) {
@@ -296,7 +296,7 @@ class BuilderInfo {
     return subBuilderFunc!();
   }
 
-  ProtobufEnum? _decodeEnum(
+  ProtobufEnum? decodeEnum(
       int tagNumber, ExtensionRegistry? registry, int rawValue) {
     var f = valueOfFunc(tagNumber);
     if (f == null && registry != null) {

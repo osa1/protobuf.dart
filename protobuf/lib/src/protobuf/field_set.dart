@@ -137,7 +137,7 @@ class FieldSet {
     return extensions!;
   }
 
-  UnknownFieldSet _ensureUnknownFields() {
+  UnknownFieldSet ensureUnknownFields() {
     if (unknownFields == null) {
       if (_isReadOnly) return UnknownFieldSet.emptyUnknownFieldSet;
       unknownFields = UnknownFieldSet();
@@ -148,7 +148,7 @@ class FieldSet {
   // Metadata about single fields
 
   /// Returns FieldInfo for a non-extension field, or null if not found.
-  FieldInfo? _nonExtensionInfo(BuilderInfo meta, int? tagNumber) =>
+  FieldInfo? nonExtensionInfo(BuilderInfo meta, int? tagNumber) =>
       meta.fieldInfo[tagNumber];
 
   /// Returns FieldInfo for a non-extension field.
@@ -164,7 +164,7 @@ class FieldSet {
 
   /// Returns the FieldInfo for a regular or extension field.
   FieldInfo? _getFieldInfoOrNull(int tagNumber) {
-    var fi = _nonExtensionInfo(meta, tagNumber);
+    var fi = nonExtensionInfo(meta, tagNumber);
     if (fi != null) return fi;
     if (!hasExtensions) return null;
     return extensions!.getInfoOrNull(tagNumber);
@@ -199,7 +199,7 @@ class FieldSet {
     }
 
     if (hasUnknownFields) {
-      _ensureUnknownFields()._markReadOnly();
+      ensureUnknownFields()._markReadOnly();
     }
   }
 
@@ -215,7 +215,7 @@ class FieldSet {
   /// Creates repeated fields (unless read-only).
   /// Suitable for public API.
   dynamic _getField(int tagNumber) {
-    var fi = _nonExtensionInfo(meta, tagNumber);
+    var fi = nonExtensionInfo(meta, tagNumber);
     if (fi != null) {
       var value = values[fi.index!];
       if (value != null) return value;
@@ -270,21 +270,21 @@ class FieldSet {
   dynamic _getFieldOrNullByTag(int tagNumber) {
     var fi = _getFieldInfoOrNull(tagNumber);
     if (fi == null) return null;
-    return _getFieldOrNull(fi);
+    return getFieldOrNull(fi);
   }
 
   /// Returns the field's value or null if not set.
   ///
   /// Works for both extended and non-extend fields.
   /// Works for both repeated and non-repeated fields.
-  dynamic _getFieldOrNull(FieldInfo fi) {
+  dynamic getFieldOrNull(FieldInfo fi) {
     if (fi.index != null) return values[fi.index!];
     if (!hasExtensions) return null;
     return extensions!.getFieldOrNull(fi as Extension<dynamic>);
   }
 
   bool _hasField(int tagNumber) {
-    var fi = _nonExtensionInfo(meta, tagNumber);
+    var fi = nonExtensionInfo(meta, tagNumber);
     if (fi != null) return _$has(fi.index!);
     if (!hasExtensions) return false;
     return extensions!._hasField(tagNumber);
@@ -293,7 +293,7 @@ class FieldSet {
   void _clearField(int? tagNumber) {
     _ensureWritable();
     final info = meta;
-    var fi = _nonExtensionInfo(info, tagNumber);
+    var fi = nonExtensionInfo(info, tagNumber);
     if (fi != null) {
       // clear a non-extension field
       if (_hasObservers) _eventPlugin!.beforeClearField(fi);
@@ -328,7 +328,7 @@ class FieldSet {
     ArgumentError.checkNotNull(value, 'value');
 
     final info = meta;
-    var fi = _nonExtensionInfo(info, tagNumber);
+    var fi = nonExtensionInfo(info, tagNumber);
     if (fi == null) {
       if (!hasExtensions) {
         throw ArgumentError('tag $tagNumber not defined in $_messageName');
@@ -349,7 +349,7 @@ class FieldSet {
   ///
   /// Works for both extended and non-extended fields.
   /// Suitable for decoders that do their own validation.
-  void _setFieldUnchecked(BuilderInfo meta, FieldInfo fi, value) {
+  void setFieldUnchecked(BuilderInfo meta, FieldInfo fi, value) {
     ArgumentError.checkNotNull(fi, 'fi');
     assert(!fi.isRepeated);
     if (fi.index == null) {
@@ -367,13 +367,13 @@ class FieldSet {
   /// Creates and stores the repeated field if it doesn't exist.
   /// If it's an extension and the list doesn't exist, validates and stores it.
   /// Suitable for decoders.
-  List<T?> _ensureRepeatedField<T>(BuilderInfo meta, FieldInfo<T> fi) {
+  List<T?> ensureRepeatedField<T>(BuilderInfo meta, FieldInfo<T> fi) {
     assert(!_isReadOnly);
     assert(fi.isRepeated);
     if (fi.index == null) {
       return _ensureExtensions()._ensureRepeatedField(fi as Extension<T>);
     }
-    var value = _getFieldOrNull(fi);
+    var value = getFieldOrNull(fi);
     if (value != null) return value as List<T>;
 
     var newValue = fi._createRepeatedField(_message!);
@@ -381,12 +381,12 @@ class FieldSet {
     return newValue;
   }
 
-  PbMap<K, V> _ensureMapField<K, V>(BuilderInfo meta, MapFieldInfo<K, V> fi) {
+  PbMap<K, V> ensureMapField<K, V>(BuilderInfo meta, MapFieldInfo<K, V> fi) {
     assert(!_isReadOnly);
     assert(fi.isMapField);
     assert(fi.index != null); // Map fields are not allowed to be extensions.
 
-    var value = _getFieldOrNull(fi);
+    var value = getFieldOrNull(fi);
     if (value != null) return (value as Map<K, V>) as PbMap<K, V>;
 
     var newValue = fi._createMapField(_message!);
@@ -782,7 +782,7 @@ class FieldSet {
     }
 
     if (other.hasUnknownFields) {
-      _ensureUnknownFields().mergeFromUnknownFieldSet(other.unknownFields!);
+      ensureUnknownFields().mergeFromUnknownFieldSet(other.unknownFields!);
     }
   }
 
@@ -792,7 +792,7 @@ class FieldSet {
     // Determine the FieldInfo to use.
     // Don't allow regular fields to be overwritten by extensions.
     final info = meta;
-    var fi = _nonExtensionInfo(info, tagNumber);
+    var fi = nonExtensionInfo(info, tagNumber);
     if (fi == null && isExtension!) {
       // This will overwrite any existing extension field info.
       fi = otherFi;
@@ -924,7 +924,7 @@ class FieldSet {
     }
 
     if (original.hasUnknownFields) {
-      _ensureUnknownFields().fields.addAll(original.unknownFields!.fields);
+      ensureUnknownFields().fields.addAll(original.unknownFields!.fields);
     }
 
     _oneofCases?.addAll(original._oneofCases!);

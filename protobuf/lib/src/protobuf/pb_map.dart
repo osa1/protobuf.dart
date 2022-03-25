@@ -11,22 +11,22 @@ class PbMap<K, V> extends MapBase<K, V> {
   static const int keyFieldNumber = 1;
   static const int valueFieldNumber = 2;
 
-  final Map<K, V> _wrappedMap;
+  final Map<K, V> wrappedMap;
 
   bool _isReadonly = false;
 
   // The provided [info] will be ignored.
   PbMap(this.keyFieldType, this.valueFieldType, [BuilderInfo? info])
-      : _wrappedMap = <K, V>{};
+      : wrappedMap = <K, V>{};
 
   PbMap.unmodifiable(PbMap other)
       : keyFieldType = other.keyFieldType,
         valueFieldType = other.valueFieldType,
-        _wrappedMap = Map.unmodifiable(other._wrappedMap),
+        wrappedMap = Map.unmodifiable(other.wrappedMap),
         _isReadonly = other._isReadonly;
 
   @override
-  V? operator [](Object? key) => _wrappedMap[key];
+  V? operator [](Object? key) => wrappedMap[key];
 
   @override
   void operator []=(K key, V value) {
@@ -35,7 +35,7 @@ class PbMap<K, V> extends MapBase<K, V> {
     }
     _checkNotNull(key);
     _checkNotNull(value);
-    _wrappedMap[key] = value;
+    wrappedMap[key] = value;
   }
 
   /// A [PbMap] is equal to another [PbMap] with equal key/value
@@ -68,7 +68,7 @@ class PbMap<K, V> extends MapBase<K, V> {
   /// pairs in any order. Then, the `hashCode` is guaranteed to be the same.
   @override
   int get hashCode {
-    return _wrappedMap.entries
+    return wrappedMap.entries
         .fold(0, (h, entry) => h ^ _HashUtils._hash2(entry.key, entry.value));
   }
 
@@ -77,18 +77,18 @@ class PbMap<K, V> extends MapBase<K, V> {
     if (_isReadonly) {
       throw UnsupportedError('Attempted to change a read-only map field');
     }
-    _wrappedMap.clear();
+    wrappedMap.clear();
   }
 
   @override
-  Iterable<K> get keys => _wrappedMap.keys;
+  Iterable<K> get keys => wrappedMap.keys;
 
   @override
   V? remove(Object? key) {
     if (_isReadonly) {
       throw UnsupportedError('Attempted to change a read-only map field');
     }
-    return _wrappedMap.remove(key);
+    return wrappedMap.remove(key);
   }
 
   void _mergeEntry(BuilderInfo mapEntryMeta, CodedBufferReader input,
@@ -103,7 +103,7 @@ class PbMap<K, V> extends MapBase<K, V> {
     var key = entryFieldSet.values[0] ?? mapEntryMeta.byIndex[0].makeDefault!();
     var value =
         entryFieldSet.values[1] ?? mapEntryMeta.byIndex[1].makeDefault!();
-    _wrappedMap[key] = value;
+    wrappedMap[key] = value;
   }
 
   void _checkNotNull(Object? val) {

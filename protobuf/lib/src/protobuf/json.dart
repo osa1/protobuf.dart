@@ -6,7 +6,7 @@ part of protobuf;
 
 Map<String, dynamic> _writeToJsonMap(FieldSet fs) {
   dynamic convertToMap(dynamic fieldValue, int fieldType) {
-    var baseType = PbFieldType._baseType(fieldType);
+    var baseType = PbFieldType.baseType(fieldType);
 
     if (_isRepeated(fieldType)) {
       return List.from(fieldValue.map((e) => convertToMap(e, baseType)));
@@ -160,7 +160,7 @@ void _setJsonField(BuilderInfo meta, FieldSet fs, json, FieldInfo fi,
     fs._validateField(fi, value);
     return true;
   }());
-  fs._setFieldUnchecked(meta, fi, value);
+  fs.setFieldUnchecked(meta, fi, value);
 }
 
 /// Converts [value] from the Json format to the Dart data type
@@ -173,7 +173,7 @@ void _setJsonField(BuilderInfo meta, FieldSet fs, json, FieldInfo fi,
 dynamic _convertJsonValue(BuilderInfo meta, FieldSet fs, value, int tagNumber,
     int fieldType, ExtensionRegistry? registry) {
   String expectedType; // for exception message
-  switch (PbFieldType._baseType(fieldType)) {
+  switch (PbFieldType.baseType(fieldType)) {
     case PbFieldType.BOOL_BIT:
       if (value is bool) {
         return value;
@@ -225,7 +225,7 @@ dynamic _convertJsonValue(BuilderInfo meta, FieldSet fs, value, int tagNumber,
         // The following call will return null if the enum value is unknown.
         // In that case, we want the caller to ignore this value, so we return
         // null from this method as well.
-        return meta._decodeEnum(tagNumber, registry, value);
+        return meta.decodeEnum(tagNumber, registry, value);
       }
       expectedType = 'int or stringified int';
       break;
@@ -260,7 +260,7 @@ dynamic _convertJsonValue(BuilderInfo meta, FieldSet fs, value, int tagNumber,
     case PbFieldType.MESSAGE_BIT:
       if (value is Map) {
         final messageValue = value as Map<String, dynamic>;
-        var subMessage = meta._makeEmptyMessage(tagNumber, registry);
+        var subMessage = meta.makeEmptyMessage(tagNumber, registry);
         _mergeFromJsonMap(subMessage.fieldSet, messageValue, registry);
         return subMessage;
       }
