@@ -1,11 +1,13 @@
 library protobuf_serializers;
 
+import 'dart:math' as math;
 import 'dart:typed_data' show TypedData, Uint8List, ByteData, Endian;
 
 import 'package:fixnum/fixnum.dart' show Int64;
 
 import 'package:protobuf/protobuf.dart';
 
+part 'src/coded_buffer_reader.dart';
 part 'src/coded_buffer_writer.dart';
 
 void writeToCodedBufferWriter(FieldSet fs, CodedBufferWriter out) {
@@ -40,4 +42,13 @@ void writeToCodedBufferWriter(FieldSet fs, CodedBufferWriter out) {
   }
 }
 
+void mergeFromCodedBufferReader(BuilderInfo meta, FieldSet fs,
+    CodedBufferReader input, ExtensionRegistry registry) {
+// TODO
+}
+
 List<T> _sorted<T>(Iterable<T> list) => List.from(list)..sort();
+
+int getTagFieldNumber(int tag) => tag >> TAG_TYPE_BITS;
+
+int getTagWireType(int tag) => tag & TAG_TYPE_MASK;

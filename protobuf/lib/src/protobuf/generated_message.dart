@@ -175,8 +175,8 @@ abstract class GeneratedMessage {
 
   void mergeFromCodedBufferReader(CodedBufferReader input,
       [ExtensionRegistry extensionRegistry = ExtensionRegistry.EMPTY]) {
-    final meta = fieldSet._meta;
-    _mergeFromCodedBufferReader(meta, fieldSet, input, extensionRegistry);
+    final info = fieldSet.meta;
+    _mergeFromCodedBufferReader(info, fieldSet, input, extensionRegistry);
   }
 
   /// Merges serialized protocol buffer data into this message.
@@ -190,8 +190,8 @@ abstract class GeneratedMessage {
   void mergeFromBuffer(List<int> input,
       [ExtensionRegistry extensionRegistry = ExtensionRegistry.EMPTY]) {
     var codedInput = CodedBufferReader(input);
-    final meta = fieldSet._meta;
-    _mergeFromCodedBufferReader(meta, fieldSet, codedInput, extensionRegistry);
+    final info = fieldSet.meta;
+    _mergeFromCodedBufferReader(info, fieldSet, codedInput, extensionRegistry);
     codedInput.checkLastTagWas(0);
   }
 

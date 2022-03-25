@@ -24,7 +24,7 @@ class UnknownFieldSet {
   Map<int, UnknownFieldSetField> asMap() => Map.from(fields);
 
   void clear() {
-    _ensureWritable('clear');
+    ensureWritable('clear');
     fields.clear();
   }
 
@@ -33,14 +33,14 @@ class UnknownFieldSet {
   bool hasField(int tagNumber) => fields.containsKey(tagNumber);
 
   void addField(int number, UnknownFieldSetField field) {
-    _ensureWritable('addField');
+    ensureWritable('addField');
     _checkFieldNumber(number);
     fields[number] = field;
   }
 
   void mergeField(int number, UnknownFieldSetField field) {
-    _ensureWritable('mergeField');
-    _getField(number)
+    ensureWritable('mergeField');
+    getFieldOrDefault(number)
       ..varints.addAll(field.varints)
       ..fixed32s.addAll(field.fixed32s)
       ..fixed64s.addAll(field.fixed64s)
@@ -49,7 +49,7 @@ class UnknownFieldSet {
   }
 
   bool mergeFieldFromBuffer(int tag, CodedBufferReader input) {
-    _ensureWritable('mergeFieldFromBuffer');
+    ensureWritable('mergeFieldFromBuffer');
     var number = getTagFieldNumber(tag);
     switch (getTagWireType(tag)) {
       case WIRETYPE_VARINT:
@@ -76,7 +76,7 @@ class UnknownFieldSet {
   }
 
   void mergeFromCodedBufferReader(CodedBufferReader input) {
-    _ensureWritable('mergeFromCodedBufferReader');
+    ensureWritable('mergeFromCodedBufferReader');
     while (true) {
       var tag = input.readTag();
       if (tag == 0 || !mergeFieldFromBuffer(tag, input)) {
@@ -86,7 +86,7 @@ class UnknownFieldSet {
   }
 
   void mergeFromUnknownFieldSet(UnknownFieldSet other) {
-    _ensureWritable('mergeFromUnknownFieldSet');
+    ensureWritable('mergeFromUnknownFieldSet');
     for (var key in other.fields.keys) {
       mergeField(key, other.fields[key]!);
     }
@@ -99,31 +99,31 @@ class UnknownFieldSet {
   }
 
   void mergeFixed32Field(int number, int value) {
-    _ensureWritable('mergeFixed32Field');
-    _getField(number).addFixed32(value);
+    ensureWritable('mergeFixed32Field');
+    getFieldOrDefault(number).addFixed32(value);
   }
 
   void mergeFixed64Field(int number, Int64 value) {
-    _ensureWritable('mergeFixed64Field');
-    _getField(number).addFixed64(value);
+    ensureWritable('mergeFixed64Field');
+    getFieldOrDefault(number).addFixed64(value);
   }
 
   void mergeGroupField(int number, UnknownFieldSet value) {
-    _ensureWritable('mergeGroupField');
-    _getField(number).addGroup(value);
+    ensureWritable('mergeGroupField');
+    getFieldOrDefault(number).addGroup(value);
   }
 
   void mergeLengthDelimitedField(int number, List<int> value) {
-    _ensureWritable('mergeLengthDelimitedField');
-    _getField(number).addLengthDelimited(value);
+    ensureWritable('mergeLengthDelimitedField');
+    getFieldOrDefault(number).addLengthDelimited(value);
   }
 
   void mergeVarintField(int number, Int64 value) {
-    _ensureWritable('mergeVarintField');
-    _getField(number).addVarint(value);
+    ensureWritable('mergeVarintField');
+    getFieldOrDefault(number).addVarint(value);
   }
 
-  UnknownFieldSetField _getField(int number) {
+  UnknownFieldSetField getFieldOrDefault(int number) {
     _checkFieldNumber(number);
     if (_isReadOnly) assert(fields.containsKey(number));
     return fields.putIfAbsent(number, () => UnknownFieldSetField());
@@ -188,7 +188,7 @@ class UnknownFieldSet {
     _isReadOnly = true;
   }
 
-  void _ensureWritable(String methodName) {
+  void ensureWritable(String methodName) {
     if (_isReadOnly) {
       frozenMessageModificationHandler('UnknownFieldSet', methodName);
     }

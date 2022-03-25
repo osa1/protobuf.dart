@@ -81,9 +81,9 @@ Map<String, dynamic> _writeToJsonMap(FieldSet fs) {
 void _mergeFromJsonMap(
     FieldSet fs, Map<String, dynamic> json, ExtensionRegistry? registry) {
   final keys = json.keys;
-  final meta = fs._meta;
+  final info = fs.meta;
   for (var key in keys) {
-    var fi = meta.byTagAsString[key];
+    var fi = info.byTagAsString[key];
     if (fi == null) {
       if (registry == null) continue; // Unknown tag; skip
       fi = registry.getExtension(fs._messageName, int.parse(key));
@@ -91,11 +91,11 @@ void _mergeFromJsonMap(
     }
     if (fi.isMapField) {
       _appendJsonMap(
-          meta, fs, json[key], fi as MapFieldInfo<dynamic, dynamic>, registry);
+          info, fs, json[key], fi as MapFieldInfo<dynamic, dynamic>, registry);
     } else if (fi.isRepeated) {
-      _appendJsonList(meta, fs, json[key], fi, registry);
+      _appendJsonList(info, fs, json[key], fi, registry);
     } else {
-      _setJsonField(meta, fs, json[key], fi, registry);
+      _setJsonField(info, fs, json[key], fi, registry);
     }
   }
 }

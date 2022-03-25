@@ -81,9 +81,9 @@ Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
     }
   }
 
-  final meta = fs._meta;
-  if (meta.toProto3Json != null) {
-    return meta.toProto3Json!(fs._message!, typeRegistry);
+  final info = fs.meta;
+  if (info.toProto3Json != null) {
+    return info.toProto3Json!(fs._message!, typeRegistry);
   }
 
   var result = <String, dynamic>{};
@@ -328,13 +328,13 @@ void _mergeFromProto3Json(
       return;
     }
 
-    final meta = fieldSet._meta;
-    final wellKnownConverter = meta.fromProto3Json;
+    final info = fieldSet.meta;
+    final wellKnownConverter = info.fromProto3Json;
     if (wellKnownConverter != null) {
       wellKnownConverter(fieldSet._message!, json, typeRegistry, context);
     } else {
       if (json is Map) {
-        final byName = meta.byName;
+        final byName = info.byName;
 
         json.forEach((key, Object? value) {
           if (key is! String) {
@@ -360,7 +360,7 @@ void _mergeFromProto3Json(
           if (_isMapField(fieldInfo.type)) {
             if (value is Map) {
               final mapFieldInfo = fieldInfo as MapFieldInfo<dynamic, dynamic>;
-              final Map fieldValues = fieldSet._ensureMapField(meta, fieldInfo);
+              final Map fieldValues = fieldSet._ensureMapField(info, fieldInfo);
               value.forEach((subKey, subValue) {
                 if (subKey is! String) {
                   throw context.parseException('Expected a String key', subKey);
@@ -377,9 +377,9 @@ void _mergeFromProto3Json(
           } else if (_isRepeated(fieldInfo.type)) {
             if (value == null) {
               // `null` is accepted as the empty list [].
-              fieldSet._ensureRepeatedField(meta, fieldInfo);
+              fieldSet._ensureRepeatedField(info, fieldInfo);
             } else if (value is List) {
-              var values = fieldSet._ensureRepeatedField(meta, fieldInfo);
+              var values = fieldSet._ensureRepeatedField(info, fieldInfo);
               for (var i = 0; i < value.length; i++) {
                 final entry = value[i];
                 context.addListIndex(i);
@@ -397,13 +397,13 @@ void _mergeFromProto3Json(
             GeneratedMessage? original = fieldSet.values[fieldInfo.index!];
             if (original == null) {
               fieldSet._setNonExtensionFieldUnchecked(
-                  meta, fieldInfo, parsedSubMessage);
+                  info, fieldInfo, parsedSubMessage);
             } else {
               original.mergeFromMessage(parsedSubMessage);
             }
           } else {
             fieldSet._setFieldUnchecked(
-                meta, fieldInfo, convertProto3JsonValue(value, fieldInfo));
+                info, fieldInfo, convertProto3JsonValue(value, fieldInfo));
           }
           context.popIndex();
         });

@@ -124,7 +124,7 @@ T _reparseMessage<T extends GeneratedMessage>(
     }
   }
 
-  for (var field in message.fieldSet._meta.byIndex) {
+  for (var field in message.fieldSet.meta.byIndex) {
     PbList? resultEntries;
     PbList ensureEntries() =>
         resultEntries ??= ensureResult().fieldSet.values[field.index!];

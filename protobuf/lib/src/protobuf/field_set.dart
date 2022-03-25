@@ -77,7 +77,7 @@ class FieldSet {
   ///
   /// WARNING: Avoid calling this for any performance critical code, instead
   /// obtain the [BuilderInfo] on the call site.
-  BuilderInfo get _meta => _message!.info_;
+  BuilderInfo get meta => _message!.info_;
 
   /// Returns the value of [_frozenState] as if it were a boolean indicator
   /// for whether `this` is read-only (has been frozen).
@@ -117,14 +117,14 @@ class FieldSet {
 
   // Metadata about multiple fields
 
-  String get _messageName => _meta.qualifiedMessageName;
-  bool get _hasRequiredFields => _meta.hasRequiredFields;
+  String get _messageName => meta.qualifiedMessageName;
+  bool get _hasRequiredFields => meta.hasRequiredFields;
 
   /// The FieldInfo for each non-extension field.
-  Iterable<FieldInfo> get _infos => _meta.fieldInfo.values;
+  Iterable<FieldInfo> get _infos => meta.fieldInfo.values;
 
   /// The FieldInfo for each non-extension field in tag order.
-  Iterable<FieldInfo> get infosSortedByTag => _meta.sortedByTag;
+  Iterable<FieldInfo> get infosSortedByTag => meta.sortedByTag;
 
   /// Returns true if we should send events to the plugin.
   bool get _hasObservers => _eventPlugin != null && _eventPlugin!.hasObservers;
@@ -152,7 +152,7 @@ class FieldSet {
       meta.fieldInfo[tagNumber];
 
   /// Returns FieldInfo for a non-extension field.
-  FieldInfo _nonExtensionInfoByIndex(int index) => _meta.byIndex[index];
+  FieldInfo _nonExtensionInfoByIndex(int index) => meta.byIndex[index];
 
   /// Returns the FieldInfo for a regular or extension field.
   /// throws ArgumentException if no info is found.
@@ -164,7 +164,7 @@ class FieldSet {
 
   /// Returns the FieldInfo for a regular or extension field.
   FieldInfo? _getFieldInfoOrNull(int tagNumber) {
-    var fi = _nonExtensionInfo(_meta, tagNumber);
+    var fi = _nonExtensionInfo(meta, tagNumber);
     if (fi != null) return fi;
     if (!hasExtensions) return null;
     return extensions!.getInfoOrNull(tagNumber);
@@ -173,7 +173,7 @@ class FieldSet {
   void _markReadOnly() {
     if (_isReadOnly) return;
     _frozenState = true;
-    for (var field in _meta.sortedByTag) {
+    for (var field in meta.sortedByTag) {
       if (field.isRepeated) {
         final entries = values[field.index!];
         if (entries == null) continue;
@@ -215,7 +215,7 @@ class FieldSet {
   /// Creates repeated fields (unless read-only).
   /// Suitable for public API.
   dynamic _getField(int tagNumber) {
-    var fi = _nonExtensionInfo(_meta, tagNumber);
+    var fi = _nonExtensionInfo(meta, tagNumber);
     if (fi != null) {
       var value = values[fi.index!];
       if (value != null) return value;
@@ -238,7 +238,7 @@ class FieldSet {
     // method for repeated fields:
     //   msg.mutableFoo().add(123);
     var value = fi._createRepeatedField(_message!);
-    _setNonExtensionFieldUnchecked(_meta, fi, value);
+    _setNonExtensionFieldUnchecked(meta, fi, value);
     return value;
   }
 
@@ -250,7 +250,7 @@ class FieldSet {
     // method for repeated fields:
     //   msg.mutableFoo().add(123);
     var value = fi._createRepeatedFieldWithType<T>(_message!);
-    _setNonExtensionFieldUnchecked(_meta, fi, value);
+    _setNonExtensionFieldUnchecked(meta, fi, value);
     return value;
   }
 
@@ -263,7 +263,7 @@ class FieldSet {
     }
 
     var value = fi._createMapField(_message!);
-    _setNonExtensionFieldUnchecked(_meta, fi, value);
+    _setNonExtensionFieldUnchecked(meta, fi, value);
     return value;
   }
 
@@ -284,7 +284,7 @@ class FieldSet {
   }
 
   bool _hasField(int tagNumber) {
-    var fi = _nonExtensionInfo(_meta, tagNumber);
+    var fi = _nonExtensionInfo(meta, tagNumber);
     if (fi != null) return _$has(fi.index!);
     if (!hasExtensions) return false;
     return extensions!._hasField(tagNumber);
@@ -292,18 +292,18 @@ class FieldSet {
 
   void _clearField(int? tagNumber) {
     _ensureWritable();
-    final meta = _meta;
-    var fi = _nonExtensionInfo(meta, tagNumber);
+    final info = meta;
+    var fi = _nonExtensionInfo(info, tagNumber);
     if (fi != null) {
       // clear a non-extension field
       if (_hasObservers) _eventPlugin!.beforeClearField(fi);
       values[fi.index!] = null;
 
-      if (meta.oneofs.containsKey(fi.tagNumber)) {
-        _oneofCases!.remove(meta.oneofs[fi.tagNumber]);
+      if (info.oneofs.containsKey(fi.tagNumber)) {
+        _oneofCases!.remove(info.oneofs[fi.tagNumber]);
       }
 
-      var oneofIndex = meta.oneofs[fi.tagNumber];
+      var oneofIndex = info.oneofs[fi.tagNumber];
       if (oneofIndex != null) _oneofCases![oneofIndex] = 0;
       return;
     }
@@ -327,8 +327,8 @@ class FieldSet {
   void _setField(int tagNumber, Object value) {
     ArgumentError.checkNotNull(value, 'value');
 
-    final meta = _meta;
-    var fi = _nonExtensionInfo(meta, tagNumber);
+    final info = meta;
+    var fi = _nonExtensionInfo(info, tagNumber);
     if (fi == null) {
       if (!hasExtensions) {
         throw ArgumentError('tag $tagNumber not defined in $_messageName');
@@ -342,7 +342,7 @@ class FieldSet {
           fi, value, 'repeating field (use get + .add())'));
     }
     _validateField(fi, value);
-    _setNonExtensionFieldUnchecked(meta, fi, value);
+    _setNonExtensionFieldUnchecked(info, fi, value);
   }
 
   /// Sets a non-repeated field without validating it.
@@ -549,9 +549,9 @@ class FieldSet {
     if (_hasObservers) {
       _eventPlugin!.beforeSetField(_nonExtensionInfoByIndex(index), value);
     }
-    final meta = _meta;
-    var tag = meta.byIndex[index].tagNumber;
-    var oneofIndex = meta.oneofs[tag];
+    final info = meta;
+    var tag = info.byIndex[index].tagNumber;
+    var oneofIndex = info.oneofs[tag];
 
     if (oneofIndex != null) {
       _clearField(_oneofCases![oneofIndex]);
@@ -591,7 +591,7 @@ class FieldSet {
   }
 
   bool _equals(FieldSet o) {
-    if (_meta != o._meta) return false;
+    if (meta != o.meta) return false;
     for (var i = 0; i < values.length; i++) {
       if (!_equalFieldValues(values[i], o.values[i])) return false;
     }
@@ -693,7 +693,7 @@ class FieldSet {
     }
 
     // Hash with descriptor.
-    var hash = _HashUtils._combine(0, _meta.hashCode);
+    var hash = _HashUtils._combine(0, meta.hashCode);
     // Hash with fields.
     hash = hashEachField(hash);
     // Hash with unknown fields.
@@ -791,8 +791,8 @@ class FieldSet {
 
     // Determine the FieldInfo to use.
     // Don't allow regular fields to be overwritten by extensions.
-    final meta = _meta;
-    var fi = _nonExtensionInfo(meta, tagNumber);
+    final info = meta;
+    var fi = _nonExtensionInfo(info, tagNumber);
     if (fi == null && isExtension!) {
       // This will overwrite any existing extension field info.
       fi = otherFi;
@@ -803,7 +803,7 @@ class FieldSet {
     if (fi!.isMapField) {
       var f = fi as MapFieldInfo<dynamic, dynamic>;
       mustClone = _isGroupOrMessage(f.valueFieldType!);
-      var map = f._ensureMapField(meta, this) as PbMap<dynamic, dynamic>;
+      var map = f._ensureMapField(info, this) as PbMap<dynamic, dynamic>;
       if (mustClone) {
         for (MapEntry entry in fieldValue.entries) {
           map[entry.key] = (entry.value as GeneratedMessage).deepCopy();
@@ -818,7 +818,7 @@ class FieldSet {
       if (mustClone) {
         // fieldValue must be a PbListBase of GeneratedMessage.
         PbListBase<GeneratedMessage> pbList = fieldValue;
-        var repeatedFields = fi._ensureRepeatedField(meta, this);
+        var repeatedFields = fi._ensureRepeatedField(info, this);
         for (var i = 0; i < pbList.length; ++i) {
           repeatedFields.add(pbList[i].deepCopy());
         }
@@ -847,7 +847,7 @@ class FieldSet {
           ._setFieldAndInfo(fi as Extension<dynamic>, fieldValue);
     } else {
       _validateField(fi, fieldValue);
-      _setNonExtensionFieldUnchecked(meta, fi, fieldValue);
+      _setNonExtensionFieldUnchecked(info, fi, fieldValue);
     }
   }
 
@@ -901,7 +901,7 @@ class FieldSet {
   /// Map fields and repeated fields are copied.
   void _shallowCopyValues(FieldSet original) {
     values.setRange(0, original.values.length, original.values);
-    final info = _meta;
+    final info = meta;
     for (var index = 0; index < info.byIndex.length; index++) {
       var fieldInfo = info.byIndex[index];
       if (fieldInfo.isMapField) {
