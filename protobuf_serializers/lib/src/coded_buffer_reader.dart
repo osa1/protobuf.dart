@@ -80,37 +80,26 @@ class CodedBufferReader {
     var number = getTagFieldNumber(tag);
     switch (getTagWireType(tag)) {
       case WIRETYPE_VARINT:
-        // mergeVarintField(number, input.readInt64()); TODO
+        unknownFieldSet.mergeVarintField(number, readInt64());
         return true;
       case WIRETYPE_FIXED64:
-        // mergeFixed64Field(number, input.readFixed64()); TODO
+        unknownFieldSet.mergeFixed64Field(number, readFixed64());
         return true;
       case WIRETYPE_LENGTH_DELIMITED:
-        // mergeLengthDelimitedField(number, input.readBytes()); TODO
+        unknownFieldSet.mergeLengthDelimitedField(number, readBytes());
         return true;
       case WIRETYPE_START_GROUP:
-        // var subGroup = input.readUnknownFieldSetGroup(number); TODO
-        // mergeGroupField(number, subGroup);
+        var subGroup = readUnknownFieldSetGroup(number);
+        unknownFieldSet.mergeGroupField(number, subGroup);
         return true;
       case WIRETYPE_END_GROUP:
         return false;
       case WIRETYPE_FIXED32:
-        // mergeFixed32Field(number, input.readFixed32()); TODO
+        unknownFieldSet.mergeFixed32Field(number, readFixed32());
         return true;
       default:
         throw InvalidProtocolBufferException.invalidWireType();
     }
-  }
-
-  void _mergeVarintField(
-      int number, Int64 value, UnknownFieldSet unknownFieldSet) {
-    unknownFieldSet.ensureWritable('mergeVarintField');
-    unknownFieldSet.getFieldOrDefault(number).addVarint(value);
-  }
-
-  void _mergeEntryFieldSet(BuilderInfo mapEntryMeta, FieldSet entryFieldSet,
-      ExtensionRegistry registry) {
-// TODO
   }
 
   void _mergeMapEntry(BuilderInfo mapEntryMeta, PbMap map,
@@ -119,8 +108,7 @@ class CodedBufferReader {
     var oldLimit = _currentLimit;
     _currentLimit = _bufferPos + length;
     final entryFieldSet = FieldSet(null, mapEntryMeta, null);
-    // _mergeFromCodedBufferReader(mapEntryMeta, entryFieldSet, input, registry!);
-    _mergeEntryFieldSet(mapEntryMeta, entryFieldSet, registry!);
+    mergeFromCodedBufferReader(mapEntryMeta, entryFieldSet, this, registry!);
     checkLastTagWas(0);
     _currentLimit = oldLimit;
     var key = entryFieldSet.values[0] ?? mapEntryMeta.byIndex[0].makeDefault!();
