@@ -25,9 +25,19 @@ void writeToCodedBufferWriter(FieldSet fs, CodedBufferWriter out) {
       out.writeField(tagNumber, fi.type, fs.extensions!.getFieldOrNull(fi));
     }
   }
-  // if (fs.hasUnknownFields) {
-  //   fs.unknownFields!.writeToCodedBufferWriter2(out);
-  // }
+
+  if (fs.hasUnknownFields) {
+    final fields = fs.unknownFields!.fields;
+    for (var key in fields.keys) {
+      final UnknownFieldSetField value = fields[key]!;
+
+      out.writeField(key, PbFieldType.REPEATED_UINT64, value.varints);
+      out.writeField(key, PbFieldType.REPEATED_FIXED32, value.fixed32s);
+      out.writeField(key, PbFieldType.REPEATED_FIXED64, value.fixed64s);
+      out.writeField(key, PbFieldType.REPEATED_BYTES, value.lengthDelimited);
+      out.writeField(key, PbFieldType.REPEATED_GROUP, value.groups);
+    }
+  }
 }
 
 List<T> _sorted<T>(Iterable<T> list) => List.from(list)..sort();

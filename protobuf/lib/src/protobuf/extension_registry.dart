@@ -111,10 +111,10 @@ T _reparseMessage<T extends GeneratedMessage>(
     var codedBufferWriter = CodedBufferWriter();
     extensionRegistry._extensions[message.info_.qualifiedMessageName]
         ?.forEach((tagNumber, extension) {
-      final unknownField = messageUnknownFields._fields[tagNumber];
+      final unknownField = messageUnknownFields.fields[tagNumber];
       if (unknownField != null) {
         unknownField.writeTo(tagNumber, codedBufferWriter);
-        ensureUnknownFields()._fields.remove(tagNumber);
+        ensureUnknownFields().fields.remove(tagNumber);
       }
     });
 

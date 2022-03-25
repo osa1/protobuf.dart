@@ -924,7 +924,7 @@ class FieldSet {
     }
 
     if (original.hasUnknownFields) {
-      _ensureUnknownFields()._fields.addAll(original.unknownFields!._fields);
+      _ensureUnknownFields().fields.addAll(original.unknownFields!.fields);
     }
 
     _oneofCases?.addAll(original._oneofCases!);

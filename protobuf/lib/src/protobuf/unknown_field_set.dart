@@ -7,7 +7,7 @@ part of protobuf;
 class UnknownFieldSet {
   static final UnknownFieldSet emptyUnknownFieldSet = UnknownFieldSet()
     .._markReadOnly();
-  final Map<int, UnknownFieldSetField> _fields = <int, UnknownFieldSetField>{};
+  final Map<int, UnknownFieldSetField> fields = <int, UnknownFieldSetField>{};
 
   UnknownFieldSet();
 
@@ -17,25 +17,25 @@ class UnknownFieldSet {
 
   UnknownFieldSet clone() => UnknownFieldSet._clone(this);
 
-  bool get isEmpty => _fields.isEmpty;
-  bool get isNotEmpty => _fields.isNotEmpty;
+  bool get isEmpty => fields.isEmpty;
+  bool get isNotEmpty => fields.isNotEmpty;
   bool _isReadOnly = false;
 
-  Map<int, UnknownFieldSetField> asMap() => Map.from(_fields);
+  Map<int, UnknownFieldSetField> asMap() => Map.from(fields);
 
   void clear() {
     _ensureWritable('clear');
-    _fields.clear();
+    fields.clear();
   }
 
-  UnknownFieldSetField? getField(int tagNumber) => _fields[tagNumber];
+  UnknownFieldSetField? getField(int tagNumber) => fields[tagNumber];
 
-  bool hasField(int tagNumber) => _fields.containsKey(tagNumber);
+  bool hasField(int tagNumber) => fields.containsKey(tagNumber);
 
   void addField(int number, UnknownFieldSetField field) {
     _ensureWritable('addField');
     _checkFieldNumber(number);
-    _fields[number] = field;
+    fields[number] = field;
   }
 
   void mergeField(int number, UnknownFieldSetField field) {
@@ -87,8 +87,8 @@ class UnknownFieldSet {
 
   void mergeFromUnknownFieldSet(UnknownFieldSet other) {
     _ensureWritable('mergeFromUnknownFieldSet');
-    for (var key in other._fields.keys) {
-      mergeField(key, other._fields[key]!);
+    for (var key in other.fields.keys) {
+      mergeField(key, other.fields[key]!);
     }
   }
 
@@ -125,8 +125,8 @@ class UnknownFieldSet {
 
   UnknownFieldSetField _getField(int number) {
     _checkFieldNumber(number);
-    if (_isReadOnly) assert(_fields.containsKey(number));
-    return _fields.putIfAbsent(number, () => UnknownFieldSetField());
+    if (_isReadOnly) assert(fields.containsKey(number));
+    return fields.putIfAbsent(number, () => UnknownFieldSetField());
   }
 
   @override
@@ -134,13 +134,13 @@ class UnknownFieldSet {
     if (other is! UnknownFieldSet) return false;
 
     var o = other;
-    return _areMapsEqual(o._fields, _fields);
+    return _areMapsEqual(o.fields, fields);
   }
 
   @override
   int get hashCode {
     var hash = 0;
-    _fields.forEach((int number, Object value) {
+    fields.forEach((int number, Object value) {
       hash = 0x1fffffff & ((37 * hash) + number);
       hash = 0x1fffffff & ((53 * hash) + value.hashCode);
     });
@@ -153,8 +153,8 @@ class UnknownFieldSet {
   String _toString(String indent) {
     var stringBuffer = StringBuffer();
 
-    for (var tag in _sorted(_fields.keys)) {
-      var field = _fields[tag]!;
+    for (var tag in _sorted(fields.keys)) {
+      var field = fields[tag]!;
       for (var value in field.values) {
         if (value is UnknownFieldSet) {
           stringBuffer
@@ -175,14 +175,14 @@ class UnknownFieldSet {
   }
 
   void writeToCodedBufferWriter(CodedBufferWriter output) {
-    for (var key in _fields.keys) {
-      _fields[key]!.writeTo(key, output);
+    for (var key in fields.keys) {
+      fields[key]!.writeTo(key, output);
     }
   }
 
   void _markReadOnly() {
     if (_isReadOnly) return;
-    for (var f in _fields.values) {
+    for (var f in fields.values) {
       f._markReadOnly();
     }
     _isReadOnly = true;
