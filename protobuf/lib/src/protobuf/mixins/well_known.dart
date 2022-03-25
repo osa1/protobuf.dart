@@ -23,6 +23,7 @@ abstract class AnyMixin implements GeneratedMessage {
     return canUnpackIntoHelper(instance, typeUrl);
   }
 
+/*
   /// Unpacks the message in [value] into [instance].
   ///
   /// Throws a [InvalidProtocolBufferException] if [typeUrl] does not correspond
@@ -37,7 +38,9 @@ abstract class AnyMixin implements GeneratedMessage {
         extensionRegistry: extensionRegistry);
     return instance;
   }
+*/
 
+/*
   /// Updates [target] to be the packed representation of [message].
   ///
   /// The [typeUrl] will be [typeUrlPrefix]/`fullName` where `fullName` is
@@ -47,7 +50,9 @@ abstract class AnyMixin implements GeneratedMessage {
     target.value = message.writeToBuffer();
     target.typeUrl = '$typeUrlPrefix/${message.info_.qualifiedMessageName}';
   }
+*/
 
+/*
   // From google/protobuf/any.proto:
   // JSON
   // ====
@@ -94,7 +99,9 @@ abstract class AnyMixin implements GeneratedMessage {
       return {'@type': any.typeUrl, 'value': proto3Json};
     }
   }
+*/
 
+/*
   static void fromProto3JsonHelper(GeneratedMessage message, Object json,
       TypeRegistry typeRegistry, JsonParsingContext context) {
     if (json is! Map<String, dynamic>) {
@@ -131,12 +138,15 @@ abstract class AnyMixin implements GeneratedMessage {
       throw context.parseException('Expected a string', json);
     }
   }
+*/
 }
 
+/*
 String _typeNameFromUrl(String typeUrl) {
   var index = typeUrl.lastIndexOf('/');
   return index < 0 ? '' : typeUrl.substring(index + 1);
 }
+*/
 
 abstract class TimestampMixin {
   static final RegExp finalGroupsOfThreeZeroes = RegExp(r'(?:000)*$');

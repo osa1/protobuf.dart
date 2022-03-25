@@ -91,6 +91,7 @@ class PbMap<K, V> extends MapBase<K, V> {
     return wrappedMap.remove(key);
   }
 
+/*
   void _mergeEntry(BuilderInfo mapEntryMeta, CodedBufferReader input,
       [ExtensionRegistry? registry]) {
     var length = input.readInt32();
@@ -105,6 +106,7 @@ class PbMap<K, V> extends MapBase<K, V> {
         entryFieldSet.values[1] ?? mapEntryMeta.byIndex[1].makeDefault!();
     wrappedMap[key] = value;
   }
+*/
 
   void _checkNotNull(Object? val) {
     if (val == null) {

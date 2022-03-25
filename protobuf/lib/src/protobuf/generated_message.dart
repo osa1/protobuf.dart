@@ -29,12 +29,14 @@ abstract class GeneratedMessage {
     if (eventPlugin != null) eventPlugin!.attach(this);
   }
 
+/*
   GeneratedMessage.fromBuffer(
       List<int> input, ExtensionRegistry extensionRegistry) {
     _fieldSet = FieldSet(this, info_, eventPlugin);
     if (eventPlugin != null) eventPlugin!.attach(this);
     mergeFromBuffer(input, extensionRegistry);
   }
+*/
 
   GeneratedMessage.fromJson(String input, ExtensionRegistry extensionRegistry) {
     _fieldSet = FieldSet(this, info_, eventPlugin);
@@ -164,6 +166,7 @@ abstract class GeneratedMessage {
     }
   }
 
+/*
   Uint8List writeToBuffer() {
     var out = CodedBufferWriter();
     writeToCodedBufferWriter(out);
@@ -194,6 +197,7 @@ abstract class GeneratedMessage {
     _mergeFromCodedBufferReader(info, fieldSet, codedInput, extensionRegistry);
     codedInput.checkLastTagWas(0);
   }
+*/
 
   // JSON support.
 

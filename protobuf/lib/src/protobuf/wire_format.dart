@@ -21,37 +21,3 @@ int getTagFieldNumber(int tag) => tag >> TAG_TYPE_BITS;
 int getTagWireType(int tag) => tag & TAG_TYPE_MASK;
 
 int makeTag(int fieldNumber, int tag) => (fieldNumber << TAG_TYPE_BITS) | tag;
-
-/// Returns true if the wireType can be merged into the given fieldType.
-bool _wireTypeMatches(int fieldType, int wireType) {
-  switch (PbFieldType.baseType(fieldType)) {
-    case PbFieldType.BOOL_BIT:
-    case PbFieldType.ENUM_BIT:
-    case PbFieldType.INT32_BIT:
-    case PbFieldType.INT64_BIT:
-    case PbFieldType.SINT32_BIT:
-    case PbFieldType.SINT64_BIT:
-    case PbFieldType.UINT32_BIT:
-    case PbFieldType.UINT64_BIT:
-      return wireType == WIRETYPE_VARINT ||
-          wireType == WIRETYPE_LENGTH_DELIMITED;
-    case PbFieldType.FLOAT_BIT:
-    case PbFieldType.FIXED32_BIT:
-    case PbFieldType.SFIXED32_BIT:
-      return wireType == WIRETYPE_FIXED32 ||
-          wireType == WIRETYPE_LENGTH_DELIMITED;
-    case PbFieldType.DOUBLE_BIT:
-    case PbFieldType.FIXED64_BIT:
-    case PbFieldType.SFIXED64_BIT:
-      return wireType == WIRETYPE_FIXED64 ||
-          wireType == WIRETYPE_LENGTH_DELIMITED;
-    case PbFieldType.BYTES_BIT:
-    case PbFieldType.STRING_BIT:
-    case PbFieldType.MESSAGE_BIT:
-      return wireType == WIRETYPE_LENGTH_DELIMITED;
-    case PbFieldType.GROUP_BIT:
-      return wireType == WIRETYPE_START_GROUP;
-    default:
-      return false;
-  }
-}

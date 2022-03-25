@@ -165,6 +165,7 @@ void main() {
     ]);
   });
 
+/*
   test('Events are sent when merging binary', () {
     var log = makeLog();
 
@@ -198,6 +199,7 @@ void main() {
       ]
     ]);
   });
+*/
 
   test('Events are sent for extensions', () {
     var log = makeLog();
@@ -253,12 +255,14 @@ void main() {
     checkLogOnce(log, [tag, '', 'hello']);
     clear('hello');
 
+/*
     var bytes = src.writeToBuffer();
     r.mergeFromBuffer(bytes, registry);
     expect(r.getExtension(comment), 'hello');
     r.deliverChanges();
     checkLogOnce(log, [tag, '', 'hello']);
     clear('hello');
+*/
   });
 }
 

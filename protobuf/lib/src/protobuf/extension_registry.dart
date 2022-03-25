@@ -35,6 +35,7 @@ class ExtensionRegistry {
     return null;
   }
 
+/*
   /// Returns a shallow copy of [message], with all extensions in `this` parsed
   /// from the unknown fields of [message] and of every nested submessage.
   ///
@@ -89,8 +90,10 @@ class ExtensionRegistry {
   /// ```
   T reparseMessage<T extends GeneratedMessage>(T message) =>
       _reparseMessage(message, this);
+      */
 }
 
+/*
 T _reparseMessage<T extends GeneratedMessage>(
     T message, ExtensionRegistry extensionRegistry) {
   T? result;
@@ -174,6 +177,7 @@ T _reparseMessage<T extends GeneratedMessage>(
 
   return result ?? message;
 }
+*/
 
 class _EmptyExtensionRegistry implements ExtensionRegistry {
   const _EmptyExtensionRegistry();
@@ -195,7 +199,9 @@ class _EmptyExtensionRegistry implements ExtensionRegistry {
   @override
   Extension? getExtension(String messageName, int tagNumber) => null;
 
+/*
   @override
   T reparseMessage<T extends GeneratedMessage>(T message) =>
       _reparseMessage(message, this);
+*/
 }

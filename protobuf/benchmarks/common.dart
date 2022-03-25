@@ -119,6 +119,7 @@ class FromBinaryBenchmark extends _ProtobufBenchmark {
   }
 }
 
+/*
 /// Binary serialization benchmark.
 class ToBinaryBenchmark extends _ProtobufBenchmark {
   ToBinaryBenchmark(datasets) : super(datasets, 'ToBinary');
@@ -133,6 +134,7 @@ class ToBinaryBenchmark extends _ProtobufBenchmark {
     }
   }
 }
+*/
 
 /// JSON deserialization benchmark.
 class FromJsonBenchmark extends _ProtobufBenchmark {

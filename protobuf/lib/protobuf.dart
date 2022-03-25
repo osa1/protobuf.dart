@@ -8,7 +8,7 @@ import 'dart:collection' show ListBase, MapBase;
 import 'dart:convert'
     show base64Decode, base64Encode, jsonEncode, jsonDecode, Utf8Codec;
 import 'dart:math' as math;
-import 'dart:typed_data' show TypedData, Uint8List, ByteData, Endian;
+import 'dart:typed_data' show Uint8List, ByteData, Endian;
 
 import 'package:fixnum/fixnum.dart' show Int64;
 
@@ -17,9 +17,6 @@ import 'src/protobuf/permissive_compare.dart';
 import 'src/protobuf/type_registry.dart';
 export 'src/protobuf/type_registry.dart' show TypeRegistry;
 
-part 'src/protobuf/coded_buffer.dart';
-part 'src/protobuf/coded_buffer_reader.dart';
-part 'src/protobuf/coded_buffer_writer.dart';
 part 'src/protobuf/builder_info.dart';
 part 'src/protobuf/event_plugin.dart';
 part 'src/protobuf/exceptions.dart';

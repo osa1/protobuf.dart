@@ -23,7 +23,7 @@ void main(List<String> arguments) {
       .toList(growable: false);
 
   FromBinaryBenchmark(datasets).report();
-  ToBinaryBenchmark(datasets).report();
+  // ToBinaryBenchmark(datasets).report();
   ToJsonBenchmark(datasets).report();
   FromJsonBenchmark(datasets).report();
 }

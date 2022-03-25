@@ -48,6 +48,7 @@ class UnknownFieldSet {
       ..groups.addAll(field.groups);
   }
 
+/*
   bool mergeFieldFromBuffer(int tag, CodedBufferReader input) {
     ensureWritable('mergeFieldFromBuffer');
     var number = getTagFieldNumber(tag);
@@ -84,6 +85,7 @@ class UnknownFieldSet {
       }
     }
   }
+*/
 
   void mergeFromUnknownFieldSet(UnknownFieldSet other) {
     ensureWritable('mergeFromUnknownFieldSet');
@@ -174,11 +176,13 @@ class UnknownFieldSet {
     return stringBuffer.toString();
   }
 
+/*
   void writeToCodedBufferWriter(CodedBufferWriter output) {
     for (var key in fields.keys) {
       fields[key]!.writeTo(key, output);
     }
   }
+*/
 
   void _markReadOnly() {
     if (_isReadOnly) return;
@@ -274,18 +278,6 @@ class UnknownFieldSetField {
         ...fixed64s,
         ...groups,
       ];
-
-  void writeTo(int fieldNumber, CodedBufferWriter output) {
-    void write(type, value) {
-      output.writeField(fieldNumber, type, value);
-    }
-
-    write(PbFieldType.REPEATED_UINT64, varints);
-    write(PbFieldType.REPEATED_FIXED32, fixed32s);
-    write(PbFieldType.REPEATED_FIXED64, fixed64s);
-    write(PbFieldType.REPEATED_BYTES, lengthDelimited);
-    write(PbFieldType.REPEATED_GROUP, groups);
-  }
 
   void addGroup(UnknownFieldSet value) {
     groups.add(value);

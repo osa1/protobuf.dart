@@ -26,9 +26,11 @@ abstract class ReadonlyMessageMixin {
           [ExtensionRegistry extensionRegistry = ExtensionRegistry.EMPTY]) =>
       _readonly('mergeFromBuffer');
 
+/*
   void mergeFromCodedBufferReader(CodedBufferReader input,
           [ExtensionRegistry extensionRegistry = ExtensionRegistry.EMPTY]) =>
       _readonly('mergeFromCodedBufferReader');
+*/
 
   void mergeFromJson(String data,
           [ExtensionRegistry extensionRegistry = ExtensionRegistry.EMPTY]) =>

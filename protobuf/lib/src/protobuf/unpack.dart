@@ -4,6 +4,7 @@
 
 part of protobuf;
 
+/*
 /// Unpacks the message in [value] into [instance].
 ///
 /// Throws a [InvalidProtocolBufferException] if [typeUrl] does not correspond
@@ -27,6 +28,7 @@ void unpackIntoHelper<T extends GeneratedMessage>(
   }
   instance.mergeFromBuffer(value, extensionRegistry);
 }
+*/
 
 /// Returns `true` if the type of [instance] is described by
 /// `typeUrl`.
