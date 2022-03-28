@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of protobuf;
+part of protobuf_serializers;
 
-Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
+Object? writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
   String? convertToMapKey(dynamic key, int keyType) {
     var baseType = PbFieldType.baseType(keyType);
 
@@ -36,7 +36,7 @@ Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
     if (fieldValue == null) return null;
 
     if (encoding.isGroupOrMessage(fieldType!)) {
-      return _writeToProto3Json(
+      return writeToProto3Json(
           (fieldValue as GeneratedMessage).fieldSet, typeRegistry);
     } else if (encoding.isEnum(fieldType)) {
       return (fieldValue as ProtobufEnum).name;
@@ -83,7 +83,7 @@ Object? _writeToProto3Json(FieldSet fs, TypeRegistry typeRegistry) {
 
   final info = fs.meta;
   if (info.toProto3Json != null) {
-    return info.toProto3Json!(fs._message!, typeRegistry);
+    return info.toProto3Json!(fs.message!, typeRegistry);
   }
 
   var result = <String, dynamic>{};
@@ -122,7 +122,7 @@ extension _FindFirst<E> on Iterable<E> {
   }
 }
 
-void _mergeFromProto3Json(
+void mergeFromProto3Json(
     Object? json,
     FieldSet fieldSet,
     TypeRegistry typeRegistry,
@@ -331,7 +331,7 @@ void _mergeFromProto3Json(
     final info = fieldSet.meta;
     final wellKnownConverter = info.fromProto3Json;
     if (wellKnownConverter != null) {
-      wellKnownConverter(fieldSet._message!, json, typeRegistry, context);
+      wellKnownConverter(fieldSet.message!, json, typeRegistry, context);
     } else {
       if (json is Map) {
         final byName = info.byName;

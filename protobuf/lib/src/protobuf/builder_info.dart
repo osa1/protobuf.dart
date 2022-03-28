@@ -19,18 +19,19 @@ class BuilderInfo {
   List<FieldInfo>? _sortedByTag;
 
   // For well-known types.
-  final Object? Function(GeneratedMessage message, TypeRegistry typeRegistry)?
-      toProto3Json;
-  final Function(GeneratedMessage targetMessage, Object json,
-      TypeRegistry typeRegistry, JsonParsingContext context)? fromProto3Json;
+  // final Object? Function(GeneratedMessage message, TypeRegistry typeRegistry)?
+  //     toProto3Json;
+  // final Function(GeneratedMessage targetMessage, Object json,
+  //     TypeRegistry typeRegistry, JsonParsingContext context)? fromProto3Json;
   final CreateBuilderFunc? createEmptyInstance;
 
-  BuilderInfo(String? messageName,
-      {PackageName package = const PackageName(''),
-      this.createEmptyInstance,
-      this.toProto3Json,
-      this.fromProto3Json})
-      : qualifiedMessageName = '${package.prefix}$messageName';
+  BuilderInfo(
+    String? messageName, {
+    PackageName package = const PackageName(''),
+    this.createEmptyInstance,
+    // this.toProto3Json,
+    // this.fromProto3Json
+  }) : qualifiedMessageName = '${package.prefix}$messageName';
 
   void add<T>(
       int tagNumber,

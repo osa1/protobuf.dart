@@ -48,7 +48,7 @@ bool _hashCodesCanBeMemoized = true;
 /// polymorphic access due to inheritance. This turns out to
 /// be faster when compiled to JavaScript.
 class FieldSet {
-  final GeneratedMessage? _message;
+  final GeneratedMessage? message;
   final EventPlugin? _eventPlugin;
 
   /// The value of each non-extension field in a fixed-length array.
@@ -77,7 +77,7 @@ class FieldSet {
   ///
   /// WARNING: Avoid calling this for any performance critical code, instead
   /// obtain the [BuilderInfo] on the call site.
-  BuilderInfo get meta => _message!.info_;
+  BuilderInfo get meta => message!.info_;
 
   /// Returns the value of [_frozenState] as if it were a boolean indicator
   /// for whether `this` is read-only (has been frozen).
@@ -102,7 +102,7 @@ class FieldSet {
   // index is not present, the oneof field is unset.
   final Map<int, int>? _oneofCases;
 
-  FieldSet(this._message, BuilderInfo meta, this._eventPlugin)
+  FieldSet(this.message, BuilderInfo meta, this._eventPlugin)
       : values = _makeValueList(meta.byIndex.length),
         _oneofCases = meta.oneofs.isEmpty ? null : <int, int>{};
 
@@ -117,7 +117,7 @@ class FieldSet {
 
   // Metadata about multiple fields
 
-  String get _messageName => meta.qualifiedMessageName;
+  String get messageName => meta.qualifiedMessageName;
   bool get _hasRequiredFields => meta.hasRequiredFields;
 
   /// The FieldInfo for each non-extension field.
@@ -159,7 +159,7 @@ class FieldSet {
   FieldInfo _ensureInfo(int tagNumber) {
     var fi = _getFieldInfoOrNull(tagNumber);
     if (fi != null) return fi;
-    throw ArgumentError('tag $tagNumber not defined in $_messageName');
+    throw ArgumentError('tag $tagNumber not defined in $messageName');
   }
 
   /// Returns the FieldInfo for a regular or extension field.
@@ -204,7 +204,7 @@ class FieldSet {
   }
 
   void _ensureWritable() {
-    if (_isReadOnly) frozenMessageModificationHandler(_messageName);
+    if (_isReadOnly) frozenMessageModificationHandler(messageName);
   }
 
   // Single-field operations
@@ -227,7 +227,7 @@ class FieldSet {
         return extensions!._getFieldOrDefault(fi);
       }
     }
-    throw ArgumentError('tag $tagNumber not defined in $_messageName');
+    throw ArgumentError('tag $tagNumber not defined in $messageName');
   }
 
   dynamic _getDefault(FieldInfo fi) {
@@ -237,7 +237,7 @@ class FieldSet {
     // TODO(skybrian) we could avoid this by generating another
     // method for repeated fields:
     //   msg.mutableFoo().add(123);
-    var value = fi._createRepeatedField(_message!);
+    var value = fi._createRepeatedField(message!);
     _setNonExtensionFieldUnchecked(meta, fi, value);
     return value;
   }
@@ -249,7 +249,7 @@ class FieldSet {
     // TODO(skybrian) we could avoid this by generating another
     // method for repeated fields:
     //   msg.mutableFoo().add(123);
-    var value = fi._createRepeatedFieldWithType<T>(_message!);
+    var value = fi._createRepeatedFieldWithType<T>(message!);
     _setNonExtensionFieldUnchecked(meta, fi, value);
     return value;
   }
@@ -262,7 +262,7 @@ class FieldSet {
           PbMap<K, V>(fi.keyFieldType, fi.valueFieldType));
     }
 
-    var value = fi._createMapField(_message!);
+    var value = fi._createMapField(message!);
     _setNonExtensionFieldUnchecked(meta, fi, value);
     return value;
   }
@@ -331,7 +331,7 @@ class FieldSet {
     var fi = nonExtensionInfo(info, tagNumber);
     if (fi == null) {
       if (!hasExtensions) {
-        throw ArgumentError('tag $tagNumber not defined in $_messageName');
+        throw ArgumentError('tag $tagNumber not defined in $messageName');
       }
       extensions!._setField(tagNumber, value);
       return;
@@ -341,7 +341,7 @@ class FieldSet {
       throw ArgumentError(_setFieldFailedMessage(
           fi, value, 'repeating field (use get + .add())'));
     }
-    _validateField(fi, value);
+    validateField(fi, value);
     _setNonExtensionFieldUnchecked(info, fi, value);
   }
 
@@ -371,12 +371,12 @@ class FieldSet {
     assert(!_isReadOnly);
     assert(fi.isRepeated);
     if (fi.index == null) {
-      return _ensureExtensions()._ensureRepeatedField(fi as Extension<T>);
+      return _ensureExtensions().ensureRepeatedField(fi as Extension<T>);
     }
     var value = getFieldOrNull(fi);
     if (value != null) return value as List<T>;
 
-    var newValue = fi._createRepeatedField(_message!);
+    var newValue = fi._createRepeatedField(message!);
     _setNonExtensionFieldUnchecked(meta, fi, newValue);
     return newValue;
   }
@@ -389,7 +389,7 @@ class FieldSet {
     var value = getFieldOrNull(fi);
     if (value != null) return (value as Map<K, V>) as PbMap<K, V>;
 
-    var newValue = fi._createMapField(_message!);
+    var newValue = fi._createMapField(message!);
     _setNonExtensionFieldUnchecked(meta, fi, newValue);
     return newValue as PbMap<K, V>;
   }
@@ -561,7 +561,7 @@ class FieldSet {
   }
 
   bool _$check(int index, var newValue) {
-    _validateField(_nonExtensionInfoByIndex(index), newValue);
+    validateField(_nonExtensionInfoByIndex(index), newValue);
     return true; // Allows use in an assertion.
   }
 
@@ -747,7 +747,7 @@ class FieldSet {
       extensions!._info.keys.toList()
         ..sort()
         ..forEach((int tagNumber) => writeFieldValue(
-            extensions!._values[tagNumber],
+            extensions!.values[tagNumber],
             '[${extensions!._info[tagNumber]!.name}]'));
     }
     if (hasUnknownFields) {
@@ -803,7 +803,7 @@ class FieldSet {
     if (fi!.isMapField) {
       var f = fi as MapFieldInfo<dynamic, dynamic>;
       mustClone = encoding.isGroupOrMessage(f.valueFieldType!);
-      var map = f._ensureMapField(info, this) as PbMap<dynamic, dynamic>;
+      var map = f.ensureMapField(info, this) as PbMap<dynamic, dynamic>;
       if (mustClone) {
         for (MapEntry entry in fieldValue.entries) {
           map[entry.key] = (entry.value as GeneratedMessage).deepCopy();
@@ -818,14 +818,14 @@ class FieldSet {
       if (mustClone) {
         // fieldValue must be a PbListBase of GeneratedMessage.
         PbListBase<GeneratedMessage> pbList = fieldValue;
-        var repeatedFields = fi._ensureRepeatedField(info, this);
+        var repeatedFields = fi.ensureRepeatedField(info, this);
         for (var i = 0; i < pbList.length; ++i) {
           repeatedFields.add(pbList[i].deepCopy());
         }
       } else {
         // fieldValue must be at least a PbListBase.
         PbListBase pbList = fieldValue;
-        fi._ensureRepeatedField(meta, this).addAll(pbList);
+        fi.ensureRepeatedField(meta, this).addAll(pbList);
       }
       return;
     }
@@ -846,7 +846,7 @@ class FieldSet {
       _ensureExtensions()
           ._setFieldAndInfo(fi as Extension<dynamic>, fieldValue);
     } else {
-      _validateField(fi, fieldValue);
+      validateField(fi, fieldValue);
       _setNonExtensionFieldUnchecked(info, fi, fieldValue);
     }
   }
@@ -854,7 +854,7 @@ class FieldSet {
   // Error-checking
 
   /// Checks the value for a field that's about to be set.
-  void _validateField(FieldInfo fi, var newValue) {
+  void validateField(FieldInfo fi, var newValue) {
     _ensureWritable();
     var message = _getFieldError(fi.type, newValue);
     if (message != null) {
@@ -863,7 +863,7 @@ class FieldSet {
   }
 
   String _setFieldFailedMessage(FieldInfo fi, var value, String detail) {
-    return 'Illegal to set field ${fi.name} (${fi.tagNumber}) of $_messageName'
+    return 'Illegal to set field ${fi.name} (${fi.tagNumber}) of $messageName'
         ' to value ($value): $detail';
   }
 
@@ -907,13 +907,13 @@ class FieldSet {
       if (fieldInfo.isMapField) {
         PbMap? map = values[index];
         if (map != null) {
-          values[index] = (fieldInfo as MapFieldInfo)._createMapField(_message!)
+          values[index] = (fieldInfo as MapFieldInfo)._createMapField(message!)
             ..addAll(map);
         }
       } else if (fieldInfo.isRepeated) {
         PbListBase? list = values[index];
         if (list != null) {
-          values[index] = fieldInfo._createRepeatedField(_message!)
+          values[index] = fieldInfo._createRepeatedField(message!)
             ..addAll(list);
         }
       }

@@ -36,13 +36,13 @@ abstract class GeneratedMessage {
     if (eventPlugin != null) eventPlugin!.attach(this);
     mergeFromBuffer(input, extensionRegistry);
   }
-*/
 
   GeneratedMessage.fromJson(String input, ExtensionRegistry extensionRegistry) {
     _fieldSet = FieldSet(this, info_, eventPlugin);
     if (eventPlugin != null) eventPlugin!.attach(this);
     mergeFromJson(input, extensionRegistry);
   }
+*/
 
   // Overridden by subclasses.
   BuilderInfo get info_;
@@ -199,6 +199,7 @@ abstract class GeneratedMessage {
   }
 */
 
+/*
   // JSON support.
 
   /// Returns the JSON encoding of this message as a Dart [Map].
@@ -296,6 +297,7 @@ abstract class GeneratedMessage {
       [ExtensionRegistry extensionRegistry = ExtensionRegistry.EMPTY]) {
     _mergeFromJsonMap(fieldSet, json, extensionRegistry);
   }
+*/
 
   /// Adds an extension field value to a repeated field.
   ///
@@ -306,7 +308,7 @@ abstract class GeneratedMessage {
       throw ArgumentError(
           'Cannot add to a non-repeated field (use setExtension())');
     }
-    fieldSet._ensureExtensions()._ensureRepeatedField(extension).add(value);
+    fieldSet._ensureExtensions().ensureRepeatedField(extension).add(value);
   }
 
   /// Clears an extension field and also removes the extension.
