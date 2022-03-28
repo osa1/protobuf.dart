@@ -9,10 +9,10 @@ import 'package:protobuf/protobuf.dart'
     show
         BuilderInfo,
         GeneratedMessage,
-        PbFieldType,
         UnknownFieldSetField,
         frozenMessageModificationHandler,
         defaultFrozenMessageModificationHandler;
+import 'package:protobuf_encoding/protobuf_encoding.dart';
 import 'package:test/test.dart';
 
 Matcher throwsError(Type expectedType, Matcher expectedMessage) =>

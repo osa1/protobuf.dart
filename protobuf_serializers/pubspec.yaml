@@ -8,6 +8,8 @@ environment:
 dependencies:
   protobuf:
     path: '../protobuf'
+  protobuf_encoding:
+    path: '../protobuf_encoding'
 
 dev_dependencies:
   test: ^1.16.0

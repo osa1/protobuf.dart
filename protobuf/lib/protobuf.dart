@@ -11,6 +11,8 @@ import 'dart:math' as math;
 import 'dart:typed_data' show Uint8List, ByteData, Endian;
 
 import 'package:fixnum/fixnum.dart' show Int64;
+import 'package:protobuf_encoding/protobuf_encoding.dart' as encoding;
+import 'package:protobuf_encoding/protobuf_encoding.dart' show PbFieldType;
 
 import 'src/protobuf/json_parsing_context.dart';
 import 'src/protobuf/permissive_compare.dart';

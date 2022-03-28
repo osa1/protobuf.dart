@@ -5,12 +5,8 @@
 import 'package:collection/collection.dart';
 import 'package:fixnum/fixnum.dart' show Int64;
 import 'package:protobuf/protobuf.dart'
-    show
-        BuilderInfo,
-        CreateBuilderFunc,
-        GeneratedMessage,
-        PbFieldType,
-        ProtobufEnum;
+    show BuilderInfo, CreateBuilderFunc, GeneratedMessage, ProtobufEnum;
+import 'package:protobuf_encoding/protobuf_encoding.dart';
 
 final mockEnumValues = [ProtobufEnum(1, 'a'), ProtobufEnum(2, 'b')];
 BuilderInfo mockInfo(String className, CreateBuilderFunc create) {

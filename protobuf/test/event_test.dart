@@ -8,6 +8,7 @@ library event_test;
 import 'package:protobuf/protobuf.dart';
 import 'package:protobuf/src/protobuf/mixins/event_mixin.dart'
     show PbEventMixin, PbFieldChange;
+import 'package:protobuf_encoding/protobuf_encoding.dart';
 import 'package:test/test.dart' show test, expect;
 
 import 'mock_util.dart' show MockMessage, mockInfo;

@@ -5,6 +5,7 @@
 
 import 'package:fixnum/fixnum.dart';
 import 'package:protobuf/protobuf.dart';
+import 'package:protobuf_encoding/protobuf_encoding.dart';
 import 'package:test/test.dart';
 
 // [ArgumentError] in production mode, [TypeError] in checked.

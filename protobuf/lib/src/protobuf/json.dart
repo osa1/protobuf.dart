@@ -8,7 +8,7 @@ Map<String, dynamic> _writeToJsonMap(FieldSet fs) {
   dynamic convertToMap(dynamic fieldValue, int fieldType) {
     var baseType = PbFieldType.baseType(fieldType);
 
-    if (_isRepeated(fieldType)) {
+    if (encoding.isRepeated(fieldType)) {
       return List.from(fieldValue.map((e) => convertToMap(e, baseType)));
     }
 
@@ -56,7 +56,7 @@ Map<String, dynamic> _writeToJsonMap(FieldSet fs) {
     if (value == null || (value is List && value.isEmpty)) {
       continue; // It's missing, repeated, or an empty byte array.
     }
-    if (_isMapField(fi.type)) {
+    if (encoding.isMapField(fi.type)) {
       result['${fi.tagNumber}'] =
           _writeMap(value, fi as MapFieldInfo<dynamic, dynamic>);
       continue;
