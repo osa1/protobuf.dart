@@ -6,130 +6,220 @@
 part of protobuf;
 
 class FieldType {
-  final FieldBaseType baseType;
-  final bool isGroup;
-  final bool isPacked;
-  final bool isRepeated;
-  final bool isRequired;
+  // final FieldBaseType baseType;
+  // final bool isGroup;
+  // final bool isPacked;
+  // final bool isRepeated;
+  // final bool isRequired;
 
+  // From least significant to most:
+  // - FieldBaseType: 5 bits
+  // - bool isGroup: 1 bit
+  // - bool isPacked: 1 bit
+  // - bool isRepeated: 1 bit
+  // - bool isRequired: 1 bit
+  final int _fieldTypePacked;
+
+  static const _BASE_TYPE_BIT_MASK = (1 << 5) - 1;
+  static const _GROUP_BIT = 1 << 5;
+  static const _PACKED_BIT = 1 << 6;
+  static const _REPEATED_BIT = 1 << 7;
+  static const _REQUIRED_BIT = 1 << 8;
+
+  /*
   const FieldType.dummy()
       : baseType = FieldBaseType.int32,
         isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = false;
+  */
+  const FieldType.dummy() : _fieldTypePacked = 0;
 
+  /*
   const FieldType.optional(this.baseType)
       : isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = false;
+  */
+  FieldType.optional(FieldBaseType baseType)
+      : _fieldTypePacked = baseType.index;
 
+  /*
   const FieldType.required(this.baseType)
       : isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = true;
+  */
+  FieldType.required(FieldBaseType baseType)
+      : _fieldTypePacked = baseType.index | _REQUIRED_BIT;
 
+  /*
   const FieldType.repeated(this.baseType)
       : isGroup = false,
         isPacked = false,
         isRepeated = true,
         isRequired = false;
+  */
+  FieldType.repeated(FieldBaseType baseType)
+      : _fieldTypePacked = baseType.index | _REPEATED_BIT;
 
+  /*
   const FieldType.packed(this.baseType)
       : isGroup = false,
         isPacked = true,
         isRepeated = true, // packed implies repeated
         isRequired = false;
+  */
+  // packed implies repeated
+  FieldType.packed(FieldBaseType baseType)
+      : _fieldTypePacked = baseType.index | _REPEATED_BIT | _PACKED_BIT;
 
+  /*
   const FieldType.fromBaseType(this.baseType)
       : isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = false;
+  */
+  FieldType.fromBaseType(FieldBaseType baseType)
+      : _fieldTypePacked = baseType.index;
 
+  /*
   const FieldType.MAP()
       : baseType = FieldBaseType.map,
         isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = false;
+  */
+  // TODO: Rename to `optional_map` for consistency with other constructors?
+  // TODO: See if it's possible to make this const
+  FieldType.map() : _fieldTypePacked = FieldBaseType.map.index;
 
+  /*
   const FieldType.OPTIONAL_STRING()
       : baseType = FieldBaseType.string,
         isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = false;
+  */
+  FieldType.optional_string() : _fieldTypePacked = FieldBaseType.string.index;
 
+  /*
   const FieldType.REQUIRED_STRING()
       : baseType = FieldBaseType.string,
         isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = true;
+  */
+  FieldType.required_string()
+      : _fieldTypePacked = FieldBaseType.string.index | _REQUIRED_BIT;
 
   // TODO: Can I implement this using `FieldType.repeated()`?
+  /*
   const FieldType.REPEATED_STRING()
       : baseType = FieldBaseType.string,
         isGroup = false,
         isPacked = false,
         isRepeated = true,
         isRequired = false;
+  */
+  FieldType.repeated_string()
+      : _fieldTypePacked = FieldBaseType.string.index | _REPEATED_BIT;
 
   // TODO: Can I implement this using `FieldType.repeated()`?
+  /*
   const FieldType.REPEATED_I32()
       : baseType = FieldBaseType.int32,
         isGroup = false,
         isPacked = false,
         isRepeated = true,
         isRequired = false;
+  */
+  FieldType.repeated_i32()
+      : _fieldTypePacked = FieldBaseType.int32.index | _REPEATED_BIT;
 
   // TODO: Can I implement this using `FieldType.optional()`?
+  /*
   const FieldType.OPTIONAL_I32()
       : baseType = FieldBaseType.int32,
         isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = false;
+  */
+  FieldType.optional_i32() : _fieldTypePacked = FieldBaseType.int32.index;
 
   // TODO: Can I implement this using `FieldType.optional()`?
+  /*
   const FieldType.OPTIONAL_I64()
       : baseType = FieldBaseType.int64,
         isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = false;
+  */
+  FieldType.optional_i64() : _fieldTypePacked = FieldBaseType.int64.index;
 
   // TODO: Can I implement this using `FieldType.optional()`?
+  /*
   const FieldType.OPTIONAL_BOOL()
       : baseType = FieldBaseType.bool,
         isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = false;
+  */
+  FieldType.optional_bool() : _fieldTypePacked = FieldBaseType.bool.index;
 
   // TODO: Can I implement this using `FieldType.optional()`?
+  /*
   const FieldType.OPTIONAL_MESSAGE()
       : baseType = FieldBaseType.message,
         isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = false;
+  */
+  FieldType.optional_message() : _fieldTypePacked = FieldBaseType.message.index;
 
+  /*
   const FieldType.REQUIRED_MESSAGE()
       : baseType = FieldBaseType.message,
         isGroup = false,
         isPacked = false,
         isRepeated = false,
         isRequired = true;
+  */
+  FieldType.required_message()
+      : _fieldTypePacked = FieldBaseType.message.index | _REQUIRED_BIT;
 
-  bool get isMap => baseType == FieldBaseType.map;
-  bool get isMessage => baseType == FieldBaseType.message;
-  bool get isEnum => baseType == FieldBaseType.enum_;
+  FieldBaseType get baseType =>
+      FieldBaseType.values[_fieldTypePacked & _BASE_TYPE_BIT_MASK];
+
+  bool get isMap =>
+      (_fieldTypePacked & _BASE_TYPE_BIT_MASK) == FieldBaseType.map.index;
+
+  bool get isMessage =>
+      (_fieldTypePacked & _BASE_TYPE_BIT_MASK) == FieldBaseType.message.index;
+
+  bool get isEnum =>
+      (_fieldTypePacked & _BASE_TYPE_BIT_MASK) == FieldBaseType.enum_.index;
+
   bool get isGroupOrMessage =>
-      baseType == FieldBaseType.group || baseType == FieldBaseType.message;
+      ((_fieldTypePacked & _BASE_TYPE_BIT_MASK) == FieldBaseType.group.index) ||
+      ((_fieldTypePacked & _BASE_TYPE_BIT_MASK) == FieldBaseType.message.index);
+
+  bool get isRepeated => _fieldTypePacked & _REPEATED_BIT != 0;
+
+  bool get isPacked => _fieldTypePacked & _PACKED_BIT != 0;
+
+  bool get isRequired => _fieldTypePacked & _REQUIRED_BIT != 0;
 }
 
 enum FieldBaseType {
@@ -200,80 +290,80 @@ class PbFieldType {
   // Short names for use in generated code.
 
   // _O_ptional.
-  static const FieldType OB = FieldType.optional(FieldBaseType.bool);
-  static const FieldType OY = FieldType.optional(FieldBaseType.bytes);
-  static const FieldType OS = FieldType.optional(FieldBaseType.string);
-  static const FieldType OF = FieldType.optional(FieldBaseType.float);
-  static const FieldType OD = FieldType.optional(FieldBaseType.double);
-  static const FieldType OE = FieldType.optional(FieldBaseType.enum_);
-  static const FieldType OG = FieldType.optional(FieldBaseType.group);
-  static const FieldType O3 = FieldType.optional(FieldBaseType.int32);
-  static const FieldType O6 = FieldType.optional(FieldBaseType.int64);
-  static const FieldType OS3 = FieldType.optional(FieldBaseType.sint32);
-  static const FieldType OS6 = FieldType.optional(FieldBaseType.sint64);
-  static const FieldType OU3 = FieldType.optional(FieldBaseType.uint32);
-  static const FieldType OU6 = FieldType.optional(FieldBaseType.uint64);
-  static const FieldType OF3 = FieldType.optional(FieldBaseType.fixed32);
-  static const FieldType OF6 = FieldType.optional(FieldBaseType.fixed64);
-  static const FieldType OSF3 = FieldType.optional(FieldBaseType.sfixed32);
-  static const FieldType OSF6 = FieldType.optional(FieldBaseType.sfixed64);
-  static const FieldType OM = FieldType.optional(FieldBaseType.message);
+  static FieldType OB = FieldType.optional(FieldBaseType.bool);
+  static FieldType OY = FieldType.optional(FieldBaseType.bytes);
+  static FieldType OS = FieldType.optional(FieldBaseType.string);
+  static FieldType OF = FieldType.optional(FieldBaseType.float);
+  static FieldType OD = FieldType.optional(FieldBaseType.double);
+  static FieldType OE = FieldType.optional(FieldBaseType.enum_);
+  static FieldType OG = FieldType.optional(FieldBaseType.group);
+  static FieldType O3 = FieldType.optional(FieldBaseType.int32);
+  static FieldType O6 = FieldType.optional(FieldBaseType.int64);
+  static FieldType OS3 = FieldType.optional(FieldBaseType.sint32);
+  static FieldType OS6 = FieldType.optional(FieldBaseType.sint64);
+  static FieldType OU3 = FieldType.optional(FieldBaseType.uint32);
+  static FieldType OU6 = FieldType.optional(FieldBaseType.uint64);
+  static FieldType OF3 = FieldType.optional(FieldBaseType.fixed32);
+  static FieldType OF6 = FieldType.optional(FieldBaseType.fixed64);
+  static FieldType OSF3 = FieldType.optional(FieldBaseType.sfixed32);
+  static FieldType OSF6 = FieldType.optional(FieldBaseType.sfixed64);
+  static FieldType OM = FieldType.optional(FieldBaseType.message);
 
   // re_Q_uired.
-  static const FieldType QB = FieldType.required(FieldBaseType.bool);
-  static const FieldType QY = FieldType.required(FieldBaseType.bytes);
-  static const FieldType QS = FieldType.required(FieldBaseType.string);
-  static const FieldType QF = FieldType.required(FieldBaseType.float);
-  static const FieldType QD = FieldType.required(FieldBaseType.double);
-  static const FieldType QE = FieldType.required(FieldBaseType.enum_);
-  static const FieldType QG = FieldType.required(FieldBaseType.group);
-  static const FieldType Q3 = FieldType.required(FieldBaseType.int32);
-  static const FieldType Q6 = FieldType.required(FieldBaseType.int64);
-  static const FieldType QS3 = FieldType.required(FieldBaseType.sint32);
-  static const FieldType QS6 = FieldType.required(FieldBaseType.sint64);
-  static const FieldType QU3 = FieldType.required(FieldBaseType.uint32);
-  static const FieldType QU6 = FieldType.required(FieldBaseType.uint64);
-  static const FieldType QF3 = FieldType.required(FieldBaseType.fixed32);
-  static const FieldType QF6 = FieldType.required(FieldBaseType.fixed64);
-  static const FieldType QSF3 = FieldType.required(FieldBaseType.sfixed32);
-  static const FieldType QSF6 = FieldType.required(FieldBaseType.sfixed64);
-  static const FieldType QM = FieldType.required(FieldBaseType.message);
+  static FieldType QB = FieldType.required(FieldBaseType.bool);
+  static FieldType QY = FieldType.required(FieldBaseType.bytes);
+  static FieldType QS = FieldType.required(FieldBaseType.string);
+  static FieldType QF = FieldType.required(FieldBaseType.float);
+  static FieldType QD = FieldType.required(FieldBaseType.double);
+  static FieldType QE = FieldType.required(FieldBaseType.enum_);
+  static FieldType QG = FieldType.required(FieldBaseType.group);
+  static FieldType Q3 = FieldType.required(FieldBaseType.int32);
+  static FieldType Q6 = FieldType.required(FieldBaseType.int64);
+  static FieldType QS3 = FieldType.required(FieldBaseType.sint32);
+  static FieldType QS6 = FieldType.required(FieldBaseType.sint64);
+  static FieldType QU3 = FieldType.required(FieldBaseType.uint32);
+  static FieldType QU6 = FieldType.required(FieldBaseType.uint64);
+  static FieldType QF3 = FieldType.required(FieldBaseType.fixed32);
+  static FieldType QF6 = FieldType.required(FieldBaseType.fixed64);
+  static FieldType QSF3 = FieldType.required(FieldBaseType.sfixed32);
+  static FieldType QSF6 = FieldType.required(FieldBaseType.sfixed64);
+  static FieldType QM = FieldType.required(FieldBaseType.message);
 
   // re_P_eated.
-  static const FieldType PB = FieldType.repeated(FieldBaseType.bool);
-  static const FieldType PY = FieldType.repeated(FieldBaseType.bytes);
-  static const FieldType PS = FieldType.repeated(FieldBaseType.string);
-  static const FieldType PF = FieldType.repeated(FieldBaseType.float);
-  static const FieldType PD = FieldType.repeated(FieldBaseType.double);
-  static const FieldType PE = FieldType.repeated(FieldBaseType.enum_);
-  static const FieldType PG = FieldType.repeated(FieldBaseType.group);
-  static const FieldType P3 = FieldType.repeated(FieldBaseType.int32);
-  static const FieldType P6 = FieldType.repeated(FieldBaseType.int64);
-  static const FieldType PS3 = FieldType.repeated(FieldBaseType.sint32);
-  static const FieldType PS6 = FieldType.repeated(FieldBaseType.sint64);
-  static const FieldType PU3 = FieldType.repeated(FieldBaseType.uint32);
-  static const FieldType PU6 = FieldType.repeated(FieldBaseType.uint64);
-  static const FieldType PF3 = FieldType.repeated(FieldBaseType.fixed32);
-  static const FieldType PF6 = FieldType.repeated(FieldBaseType.fixed64);
-  static const FieldType PSF3 = FieldType.repeated(FieldBaseType.sfixed32);
-  static const FieldType PSF6 = FieldType.repeated(FieldBaseType.sfixed64);
-  static const FieldType PM = FieldType.repeated(FieldBaseType.message);
+  static FieldType PB = FieldType.repeated(FieldBaseType.bool);
+  static FieldType PY = FieldType.repeated(FieldBaseType.bytes);
+  static FieldType PS = FieldType.repeated(FieldBaseType.string);
+  static FieldType PF = FieldType.repeated(FieldBaseType.float);
+  static FieldType PD = FieldType.repeated(FieldBaseType.double);
+  static FieldType PE = FieldType.repeated(FieldBaseType.enum_);
+  static FieldType PG = FieldType.repeated(FieldBaseType.group);
+  static FieldType P3 = FieldType.repeated(FieldBaseType.int32);
+  static FieldType P6 = FieldType.repeated(FieldBaseType.int64);
+  static FieldType PS3 = FieldType.repeated(FieldBaseType.sint32);
+  static FieldType PS6 = FieldType.repeated(FieldBaseType.sint64);
+  static FieldType PU3 = FieldType.repeated(FieldBaseType.uint32);
+  static FieldType PU6 = FieldType.repeated(FieldBaseType.uint64);
+  static FieldType PF3 = FieldType.repeated(FieldBaseType.fixed32);
+  static FieldType PF6 = FieldType.repeated(FieldBaseType.fixed64);
+  static FieldType PSF3 = FieldType.repeated(FieldBaseType.sfixed32);
+  static FieldType PSF6 = FieldType.repeated(FieldBaseType.sfixed64);
+  static FieldType PM = FieldType.repeated(FieldBaseType.message);
 
   // pac_K_ed.
-  static const FieldType KB = FieldType.packed(FieldBaseType.bool);
-  static const FieldType KE = FieldType.packed(FieldBaseType.enum_);
-  static const FieldType KF = FieldType.packed(FieldBaseType.float);
-  static const FieldType KD = FieldType.packed(FieldBaseType.double);
-  static const FieldType K3 = FieldType.packed(FieldBaseType.int32);
-  static const FieldType K6 = FieldType.packed(FieldBaseType.int64);
-  static const FieldType KS3 = FieldType.packed(FieldBaseType.sint32);
-  static const FieldType KS6 = FieldType.packed(FieldBaseType.sint64);
-  static const FieldType KU3 = FieldType.packed(FieldBaseType.uint32);
-  static const FieldType KU6 = FieldType.packed(FieldBaseType.uint64);
-  static const FieldType KF3 = FieldType.packed(FieldBaseType.fixed32);
-  static const FieldType KF6 = FieldType.packed(FieldBaseType.fixed64);
-  static const FieldType KSF3 = FieldType.packed(FieldBaseType.sfixed32);
-  static const FieldType KSF6 = FieldType.packed(FieldBaseType.sfixed64);
+  static FieldType KB = FieldType.packed(FieldBaseType.bool);
+  static FieldType KE = FieldType.packed(FieldBaseType.enum_);
+  static FieldType KF = FieldType.packed(FieldBaseType.float);
+  static FieldType KD = FieldType.packed(FieldBaseType.double);
+  static FieldType K3 = FieldType.packed(FieldBaseType.int32);
+  static FieldType K6 = FieldType.packed(FieldBaseType.int64);
+  static FieldType KS3 = FieldType.packed(FieldBaseType.sint32);
+  static FieldType KS6 = FieldType.packed(FieldBaseType.sint64);
+  static FieldType KU3 = FieldType.packed(FieldBaseType.uint32);
+  static FieldType KU6 = FieldType.packed(FieldBaseType.uint64);
+  static FieldType KF3 = FieldType.packed(FieldBaseType.fixed32);
+  static FieldType KF6 = FieldType.packed(FieldBaseType.fixed64);
+  static FieldType KSF3 = FieldType.packed(FieldBaseType.sfixed32);
+  static FieldType KSF6 = FieldType.packed(FieldBaseType.sfixed64);
 
-  static const FieldType M = FieldType.MAP();
+  static FieldType M = FieldType.map();
 }

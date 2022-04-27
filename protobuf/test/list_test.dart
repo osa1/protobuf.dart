@@ -97,7 +97,7 @@ void main() {
   });
 
   test('PbList for signed int32 validates items', () {
-    List<int> list = PbList(check: getCheckFunction(FieldType.REPEATED_I32()));
+    List<int> list = PbList(check: getCheckFunction(FieldType.repeated_i32()));
 
     expect(() {
       list.add(-2147483649);

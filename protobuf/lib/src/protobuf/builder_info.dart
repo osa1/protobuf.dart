@@ -73,7 +73,7 @@ class BuilderInfo {
       {ProtobufEnum? defaultEnumValue,
       String? protoName}) {
     var index = byIndex.length;
-    _addField(MapFieldInfo<K, V>(name, tagNumber, index, const FieldType.MAP(),
+    _addField(MapFieldInfo<K, V>(name, tagNumber, index, FieldType.map(),
         keyFieldType, valueFieldType, mapEntryBuilderInfo, valueCreator,
         defaultEnumValue: defaultEnumValue, protoName: protoName));
   }
@@ -124,36 +124,36 @@ class BuilderInfo {
   /// Adds PbFieldType.OS String with no default value to reduce generated
   /// code size.
   void aOS(int tagNumber, String name, {String? protoName}) {
-    add<String>(tagNumber, name, const FieldType.OPTIONAL_STRING(), null, null,
-        null, null,
+    add<String>(
+        tagNumber, name, FieldType.optional_string(), null, null, null, null,
         protoName: protoName);
   }
 
   /// Adds PbFieldType.PS String with no default value.
   void pPS(int tagNumber, String name, {String? protoName}) {
-    addRepeated<String>(tagNumber, name, const FieldType.REPEATED_STRING(),
-        getCheckFunction(const FieldType.REPEATED_STRING()), null, null, null,
+    addRepeated<String>(tagNumber, name, FieldType.repeated_string(),
+        getCheckFunction(FieldType.repeated_string()), null, null, null,
         protoName: protoName);
   }
 
   /// Adds PbFieldType.QS String with no default value.
   void aQS(int tagNumber, String name, {String? protoName}) {
-    add<String>(tagNumber, name, const FieldType.REQUIRED_STRING(), null, null,
-        null, null,
+    add<String>(
+        tagNumber, name, FieldType.required_string(), null, null, null, null,
         protoName: protoName);
   }
 
   /// Adds Int64 field with Int64.ZERO default.
   void aInt64(int tagNumber, String name, {String? protoName}) {
-    add<Int64>(tagNumber, name, const FieldType.OPTIONAL_I64(), Int64.ZERO,
-        null, null, null,
+    add<Int64>(
+        tagNumber, name, FieldType.optional_i64(), Int64.ZERO, null, null, null,
         protoName: protoName);
   }
 
   /// Adds a boolean with no default value.
   void aOB(int tagNumber, String name, {String? protoName}) {
-    add<bool>(tagNumber, name, const FieldType.OPTIONAL_BOOL(), null, null,
-        null, null,
+    add<bool>(
+        tagNumber, name, FieldType.optional_bool(), null, null, null, null,
         protoName: protoName);
   }
 
@@ -195,7 +195,7 @@ class BuilderInfo {
     add<T>(
         tagNumber,
         name,
-        const FieldType.OPTIONAL_MESSAGE(),
+        FieldType.optional_message(),
         GeneratedMessage._defaultMakerFor<T>(subBuilder),
         subBuilder,
         null,
@@ -208,7 +208,7 @@ class BuilderInfo {
     add<T>(
         tagNumber,
         name,
-        const FieldType.REQUIRED_MESSAGE(),
+        FieldType.required_message(),
         GeneratedMessage._defaultMakerFor<T>(subBuilder),
         subBuilder,
         null,

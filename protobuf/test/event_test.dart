@@ -20,7 +20,7 @@ class Rec extends MockMessage with PbEventMixin {
   Rec createEmptyInstance() => Rec();
 }
 
-Extension comment = Extension('Rec', 'comment', 6, FieldType.OPTIONAL_STRING());
+Extension comment = Extension('Rec', 'comment', 6, FieldType.optional_string());
 
 void main() {
   test('Events are sent when setting and clearing a non-repeated field', () {

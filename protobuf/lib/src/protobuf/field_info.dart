@@ -126,7 +126,7 @@ class FieldInfo<T> {
 
   bool get isRequired => type.isRequired;
   bool get isRepeated => type.isRepeated;
-  bool get isGroupOrMessage => type.isGroup || type.isMessage;
+  bool get isGroupOrMessage => type.isGroupOrMessage;
   bool get isEnum => type.isEnum;
   bool get isMapField => type.isMap;
 

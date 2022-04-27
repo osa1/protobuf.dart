@@ -29,7 +29,7 @@ void main() {
     };
   }
 
-  final int32ToBytes = convertToBytes(FieldType.OPTIONAL_I32());
+  final int32ToBytes = convertToBytes(FieldType.optional_i32());
 
   test('testInt32RoundTrips', () {
     final roundtrip = roundtripTester(
@@ -708,7 +708,7 @@ void main() {
 
   test('testWriteTo', () {
     var writer = CodedBufferWriter()
-      ..writeField(0, FieldType.OPTIONAL_I32(), 1337);
+      ..writeField(0, FieldType.optional_i32(), 1337);
     expect(writer.lengthInBytes, 3);
     var buffer = Uint8List(5);
     buffer[0] = 0x55;

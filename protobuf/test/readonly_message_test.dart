@@ -31,10 +31,10 @@ class Rec extends GeneratedMessage {
 
   @override
   BuilderInfo info_ = BuilderInfo('rec')
-    ..a(1, 'value', FieldType.OPTIONAL_I32())
+    ..a(1, 'value', FieldType.optional_i32())
     ..pc<Rec>(2, 'sub', FieldType.repeated(FieldBaseType.message),
         subBuilder: Rec.create)
-    ..p<int>(10, 'ints', FieldType.REPEATED_I32());
+    ..p<int>(10, 'ints', FieldType.repeated_i32());
 
   int get value => $_get(0, 0);
   set value(int v) {
