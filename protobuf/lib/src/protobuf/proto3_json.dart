@@ -5,109 +5,113 @@
 part of protobuf;
 
 Object? _writeToProto3Json(_FieldSet fs, TypeRegistry typeRegistry) {
-  String? convertToMapKey(dynamic key, int keyType) {
-    var baseType = PbFieldType._baseType(keyType);
-
-    assert(!_isRepeated(keyType));
-
-    switch (baseType) {
-      case PbFieldType._BOOL_BIT:
-        return key ? 'true' : 'false';
-      case PbFieldType._STRING_BIT:
-        return key;
-      case PbFieldType._UINT64_BIT:
-        return (key as Int64).toStringUnsigned();
-      case PbFieldType._INT32_BIT:
-      case PbFieldType._SINT32_BIT:
-      case PbFieldType._UINT32_BIT:
-      case PbFieldType._FIXED32_BIT:
-      case PbFieldType._SFIXED32_BIT:
-      case PbFieldType._INT64_BIT:
-      case PbFieldType._SINT64_BIT:
-      case PbFieldType._SFIXED64_BIT:
-      case PbFieldType._FIXED64_BIT:
-        return key.toString();
-      default:
-        throw StateError('Not a valid key type $keyType');
-    }
-  }
-
-  Object? valueToProto3Json(dynamic fieldValue, int? fieldType) {
-    if (fieldValue == null) return null;
-
-    if (_isGroupOrMessage(fieldType!)) {
-      return _writeToProto3Json(
-          (fieldValue as GeneratedMessage)._fieldSet, typeRegistry);
-    } else if (_isEnum(fieldType)) {
-      return (fieldValue as ProtobufEnum).name;
-    } else {
-      var baseType = PbFieldType._baseType(fieldType);
-      switch (baseType) {
-        case PbFieldType._BOOL_BIT:
-          return fieldValue ? true : false;
-        case PbFieldType._STRING_BIT:
-          return fieldValue;
-        case PbFieldType._INT32_BIT:
-        case PbFieldType._SINT32_BIT:
-        case PbFieldType._UINT32_BIT:
-        case PbFieldType._FIXED32_BIT:
-        case PbFieldType._SFIXED32_BIT:
-          return fieldValue;
-        case PbFieldType._INT64_BIT:
-        case PbFieldType._SINT64_BIT:
-        case PbFieldType._SFIXED64_BIT:
-        case PbFieldType._FIXED64_BIT:
-          return fieldValue.toString();
-        case PbFieldType._FLOAT_BIT:
-        case PbFieldType._DOUBLE_BIT:
-          double value = fieldValue;
-          if (value.isNaN) {
-            return nan;
-          }
-          if (value.isInfinite) {
-            return value.isNegative ? negativeInfinity : infinity;
-          }
-          return value;
-        case PbFieldType._UINT64_BIT:
-          return (fieldValue as Int64).toStringUnsigned();
-        case PbFieldType._BYTES_BIT:
-          return base64Encode(fieldValue);
-        default:
-          throw StateError(
-              'Invariant violation: unexpected value type $fieldType');
-      }
-    }
-  }
-
   final meta = fs._meta;
   if (meta.toProto3Json != null) {
     return meta.toProto3Json!(fs._message!, typeRegistry);
   }
 
-  var result = <String, dynamic>{};
+  var result = <String, Object?>{};
   for (var fieldInfo in fs._infosSortedByTag) {
     var value = fs._values[fieldInfo.index!];
     if (value == null || (value is List && value.isEmpty)) {
       continue; // It's missing, repeated, or an empty byte array.
     }
-    dynamic jsonValue;
+    Object? jsonValue;
     if (fieldInfo.isMapField) {
       jsonValue = (value as PbMap).map((key, entryValue) {
         var mapEntryInfo = fieldInfo as MapFieldInfo;
-        return MapEntry(convertToMapKey(key, mapEntryInfo.keyFieldType),
-            valueToProto3Json(entryValue, mapEntryInfo.valueFieldType));
+        return MapEntry(
+            _convertToMapKey(key, mapEntryInfo.keyFieldType),
+            _valueToProto3Json(
+                entryValue, mapEntryInfo.valueFieldType, typeRegistry));
       });
     } else if (fieldInfo.isRepeated) {
       jsonValue = (value as PbListBase)
-          .map((element) => valueToProto3Json(element, fieldInfo.type))
+          .map((element) =>
+              _valueToProto3Json(element, fieldInfo.type, typeRegistry))
           .toList();
     } else {
-      jsonValue = valueToProto3Json(value, fieldInfo.type);
+      jsonValue = _valueToProto3Json(value, fieldInfo.type, typeRegistry);
     }
     result[fieldInfo.name] = jsonValue;
   }
   // Extensions and unknown fields are not encoded by proto3 JSON.
   return result;
+}
+
+String? _convertToMapKey(dynamic key, int keyType) {
+  var baseType = PbFieldType._baseType(keyType);
+
+  assert(!_isRepeated(keyType));
+
+  switch (baseType) {
+    case PbFieldType._BOOL_BIT:
+      return key ? 'true' : 'false';
+    case PbFieldType._STRING_BIT:
+      return key;
+    case PbFieldType._UINT64_BIT:
+      return (key as Int64).toStringUnsigned();
+    case PbFieldType._INT32_BIT:
+    case PbFieldType._SINT32_BIT:
+    case PbFieldType._UINT32_BIT:
+    case PbFieldType._FIXED32_BIT:
+    case PbFieldType._SFIXED32_BIT:
+    case PbFieldType._INT64_BIT:
+    case PbFieldType._SINT64_BIT:
+    case PbFieldType._SFIXED64_BIT:
+    case PbFieldType._FIXED64_BIT:
+      return key.toString();
+    default:
+      throw StateError('Not a valid key type $keyType');
+  }
+}
+
+Object? _valueToProto3Json(
+    dynamic fieldValue, int? fieldType, TypeRegistry typeRegistry) {
+  if (fieldValue == null) return null;
+
+  if (_isGroupOrMessage(fieldType!)) {
+    return _writeToProto3Json(
+        (fieldValue as GeneratedMessage)._fieldSet, typeRegistry);
+  } else if (_isEnum(fieldType)) {
+    return (fieldValue as ProtobufEnum).name;
+  } else {
+    var baseType = PbFieldType._baseType(fieldType);
+    switch (baseType) {
+      case PbFieldType._BOOL_BIT:
+        return fieldValue ? true : false;
+      case PbFieldType._STRING_BIT:
+        return fieldValue;
+      case PbFieldType._INT32_BIT:
+      case PbFieldType._SINT32_BIT:
+      case PbFieldType._UINT32_BIT:
+      case PbFieldType._FIXED32_BIT:
+      case PbFieldType._SFIXED32_BIT:
+        return fieldValue;
+      case PbFieldType._INT64_BIT:
+      case PbFieldType._SINT64_BIT:
+      case PbFieldType._SFIXED64_BIT:
+      case PbFieldType._FIXED64_BIT:
+        return fieldValue.toString();
+      case PbFieldType._FLOAT_BIT:
+      case PbFieldType._DOUBLE_BIT:
+        double value = fieldValue;
+        if (value.isNaN) {
+          return nan;
+        }
+        if (value.isInfinite) {
+          return value.isNegative ? negativeInfinity : infinity;
+        }
+        return value;
+      case PbFieldType._UINT64_BIT:
+        return (fieldValue as Int64).toStringUnsigned();
+      case PbFieldType._BYTES_BIT:
+        return base64Encode(fieldValue);
+      default:
+        throw StateError(
+            'Invariant violation: unexpected value type $fieldType');
+    }
+  }
 }
 
 int _tryParse32BitProto3(String s, JsonParsingContext context) {
@@ -282,45 +286,6 @@ void _mergeFromProto3Json(
       }
     }
 
-    Object decodeMapKey(String key, int fieldType) {
-      switch (PbFieldType._baseType(fieldType)) {
-        case PbFieldType._BOOL_BIT:
-          switch (key) {
-            case 'true':
-              return true;
-            case 'false':
-              return false;
-            default:
-              throw context.parseException(
-                  'Wrong boolean key, should be one of ("true", "false")', key);
-          }
-          // ignore: dead_code
-          throw StateError('(Should have been) unreachable statement');
-        case PbFieldType._STRING_BIT:
-          return key;
-        case PbFieldType._UINT64_BIT:
-          // TODO(sigurdm): We do not throw on negative values here.
-          // That would probably require going via bignum.
-          return _tryParse64BitProto3(json, key, context);
-        case PbFieldType._INT64_BIT:
-        case PbFieldType._SINT64_BIT:
-        case PbFieldType._SFIXED64_BIT:
-        case PbFieldType._FIXED64_BIT:
-          return _tryParse64BitProto3(json, key, context);
-        case PbFieldType._INT32_BIT:
-        case PbFieldType._SINT32_BIT:
-        case PbFieldType._FIXED32_BIT:
-        case PbFieldType._SFIXED32_BIT:
-          return _check32BitSignedProto3(
-              _tryParse32BitProto3(key, context), context);
-        case PbFieldType._UINT32_BIT:
-          return _check32BitUnsignedProto3(
-              _tryParse32BitProto3(key, context), context);
-        default:
-          throw StateError('Not a valid key type $fieldType');
-      }
-    }
-
     if (json == null) {
       // `null` represents the default value. Do nothing more.
       return;
@@ -364,7 +329,8 @@ void _mergeFromProto3Json(
                   throw context.parseException('Expected a String key', subKey);
                 }
                 context.addMapIndex(subKey);
-                fieldValues[decodeMapKey(subKey, mapFieldInfo.keyFieldType)] =
+                fieldValues[_decodeMapKey(
+                        json, subKey, mapFieldInfo.keyFieldType, context)] =
                     convertProto3JsonValue(
                         subValue, mapFieldInfo.valueFieldInfo);
                 context.popIndex();
@@ -412,4 +378,44 @@ void _mergeFromProto3Json(
   }
 
   recursionHelper(json, fieldSet);
+}
+
+Object _decodeMapKey(
+    Object? json, String key, int fieldType, JsonParsingContext context) {
+  switch (PbFieldType._baseType(fieldType)) {
+    case PbFieldType._BOOL_BIT:
+      switch (key) {
+        case 'true':
+          return true;
+        case 'false':
+          return false;
+        default:
+          throw context.parseException(
+              'Wrong boolean key, should be one of ("true", "false")', key);
+      }
+      // ignore: dead_code
+      throw StateError('(Should have been) unreachable statement');
+    case PbFieldType._STRING_BIT:
+      return key;
+    case PbFieldType._UINT64_BIT:
+      // TODO(sigurdm): We do not throw on negative values here.
+      // That would probably require going via bignum.
+      return _tryParse64BitProto3(json, key, context);
+    case PbFieldType._INT64_BIT:
+    case PbFieldType._SINT64_BIT:
+    case PbFieldType._SFIXED64_BIT:
+    case PbFieldType._FIXED64_BIT:
+      return _tryParse64BitProto3(json, key, context);
+    case PbFieldType._INT32_BIT:
+    case PbFieldType._SINT32_BIT:
+    case PbFieldType._FIXED32_BIT:
+    case PbFieldType._SFIXED32_BIT:
+      return _check32BitSignedProto3(
+          _tryParse32BitProto3(key, context), context);
+    case PbFieldType._UINT32_BIT:
+      return _check32BitUnsignedProto3(
+          _tryParse32BitProto3(key, context), context);
+    default:
+      throw StateError('Not a valid key type $fieldType');
+  }
 }
