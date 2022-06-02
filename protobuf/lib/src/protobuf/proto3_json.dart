@@ -32,10 +32,10 @@ Object? _writeToProto3Json(_FieldSet fs, TypeRegistry typeRegistry) {
     }
   }
 
-  Object? valueToProto3Json(dynamic fieldValue, int? fieldType) {
+  Object? valueToProto3Json(dynamic fieldValue, int fieldType) {
     if (fieldValue == null) return null;
 
-    if (_isGroupOrMessage(fieldType!)) {
+    if (_isGroupOrMessage(fieldType)) {
       return _writeToProto3Json(
           (fieldValue as GeneratedMessage)._fieldSet, typeRegistry);
     } else if (_isEnum(fieldType)) {
@@ -92,8 +92,8 @@ Object? _writeToProto3Json(_FieldSet fs, TypeRegistry typeRegistry) {
     }
     dynamic jsonValue;
     if (fieldInfo.isMapField) {
+      var mapEntryInfo = fieldInfo as MapFieldInfo;
       jsonValue = (value as PbMap).map((key, entryValue) {
-        var mapEntryInfo = fieldInfo as MapFieldInfo;
         return MapEntry(convertToMapKey(key, mapEntryInfo.keyFieldType),
             valueToProto3Json(entryValue, mapEntryInfo.valueFieldType));
       });
