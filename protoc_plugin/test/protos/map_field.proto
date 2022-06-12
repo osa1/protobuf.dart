@@ -10,6 +10,7 @@ message TestMap {
     message MessageValue {
         optional int32 value = 1;
         optional int32 second_value = 2 [default = 42];
+        repeated int32 repeated_value = 3;
     }
 
     enum EnumValue {

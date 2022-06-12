@@ -356,4 +356,33 @@ void main() {
     expect(m1, equals(m2));
     expect(m1.hashCode, equals(m2.hashCode));
   });
+
+  test('Merging maps should merge map field values', () {
+    final m1 = TestMap.create();
+    m1.int32ToMessageField[0] = TestMap_MessageValue(repeatedValue: [1, 2]);
+
+    final m2 = TestMap.create();
+    m2.int32ToMessageField[0] = TestMap_MessageValue(repeatedValue: [3, 4]);
+
+    // Try proto3 JSON encoding
+    {
+      final json = m2.toProto3Json();
+      final merged = m1.deepCopy()..mergeFromProto3Json(json);
+      expect(merged.int32ToMessageField[0]!.repeatedValue, [1, 2, 3, 4]);
+    }
+
+    // Try custom JSON encoding
+    {
+      final json = m2.writeToJson();
+      final merged = m1.deepCopy()..mergeFromJson(json);
+      expect(merged.int32ToMessageField[0]!.repeatedValue, [1, 2, 3, 4]);
+    }
+
+    // Try binary encoding
+    {
+      final encoded = m2.writeToBuffer();
+      final merged = m1.deepCopy()..mergeFromBuffer(encoded);
+      expect(merged.int32ToMessageField[0]!.repeatedValue, [1, 2, 3, 4]);
+    }
+  });
 }
