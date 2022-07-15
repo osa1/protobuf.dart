@@ -4,6 +4,8 @@
 
 // @dart=2.11
 
+import 'dart:typed_data';
+
 import 'package:protobuf/protobuf.dart';
 import 'package:test/test.dart';
 
@@ -310,7 +312,7 @@ void main() {
 
     // Make a message containing it.
     var message = getAllSet();
-    message.optionalBytes = blob;
+    message.optionalBytes = Uint8List.fromList(blob);
 
     var message2 = TestAllTypes.fromBuffer(message.writeToBuffer());
     expect(message2.optionalBytes, message.optionalBytes);
@@ -819,8 +821,8 @@ void main() {
   });
 
   test('operator== and hashCode works for bytes', () {
-    final t1 = TestAllTypes()..optionalBytes = [1];
-    final t2 = TestAllTypes()..optionalBytes = [1];
+    final t1 = TestAllTypes()..optionalBytes = Uint8List.fromList([1]);
+    final t2 = TestAllTypes()..optionalBytes = Uint8List.fromList([1]);
     final t3 = TestAllTypes.fromBuffer(t1.writeToBuffer());
     expect(t1, equals(t2));
     expect(t1.hashCode, equals(t2.hashCode));

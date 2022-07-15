@@ -222,7 +222,7 @@ class CodedBufferWriter {
 
   /// Add TypedData splice - these bytes would be directly copied into the
   /// output buffer by [writeTo].
-  void writeRawBytes(TypedData value) {
+  void writeRawBytes(Uint8List value) {
     _commitSplice();
     _splices.add(value);
     _bytesTotal += value.lengthInBytes;
@@ -337,11 +337,10 @@ class CodedBufferWriter {
         _writeVarint32(value ? 1 : 0);
         break;
       case PbFieldType._BYTES_BIT:
-        _writeBytesNoTag(
-            value is TypedData ? value : Uint8List.fromList(value));
+        _writeBytesNoTag(value);
         break;
       case PbFieldType._STRING_BIT:
-        _writeBytesNoTag(_utf8.encode(value));
+        _writeBytesNoTag(_utf8.encode(value) as dynamic);
         break;
       case PbFieldType._DOUBLE_BIT:
         _writeDouble(value);
@@ -396,7 +395,7 @@ class CodedBufferWriter {
     }
   }
 
-  void _writeBytesNoTag(dynamic value) {
+  void _writeBytesNoTag(Uint8List value) {
     writeInt32NoTag(value.length);
     writeRawBytes(value);
   }
