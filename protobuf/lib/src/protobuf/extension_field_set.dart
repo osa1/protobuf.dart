@@ -60,7 +60,7 @@ class _ExtensionFieldSet {
 
   List _addInfoAndCreateList(Extension fi) {
     _validateInfo(fi);
-    var newList = fi._createRepeatedField(_parent._message!);
+    var newList = fi._createRepeatedField();
     _addInfoUnchecked(fi);
     _setFieldUnchecked(fi, newList);
     return newList;

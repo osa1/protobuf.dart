@@ -317,7 +317,7 @@ class _FieldSet {
     var value = _getFieldOrNull(fi);
     if (value != null) return value as List<T>;
 
-    var newValue = fi._createRepeatedField(_message!);
+    var newValue = fi._createRepeatedField();
     _setNonExtensionFieldUnchecked(meta, fi, newValue);
     return newValue;
   }
@@ -330,7 +330,7 @@ class _FieldSet {
     var value = _getFieldOrNull(fi);
     if (value != null) return value as PbMap<K, V>;
 
-    var newValue = fi._createMapField(_message!);
+    var newValue = fi._createMapField();
     _setNonExtensionFieldUnchecked(meta, fi, newValue);
     return newValue as PbMap<K, V>;
   }
@@ -396,7 +396,7 @@ class _FieldSet {
       return fi.readonlyDefault;
     }
 
-    var list = fi._createRepeatedFieldWithType<T>(_message!);
+    var list = fi._createRepeatedFieldWithType<T>();
     _setNonExtensionFieldUnchecked(_meta, fi, list);
     return list;
   }
@@ -414,7 +414,7 @@ class _FieldSet {
           PbMap<K, V>(fi.keyFieldType, fi.valueFieldType));
     }
 
-    var map = fi._createMapField(_message!);
+    var map = fi._createMapField();
     _setNonExtensionFieldUnchecked(_meta, fi, map);
     return map;
   }
@@ -866,15 +866,13 @@ class _FieldSet {
       if (fieldInfo.isMapField) {
         PbMap? map = _values[index];
         if (map != null) {
-          _values[index] = (fieldInfo as MapFieldInfo)
-              ._createMapField(_message!)
+          _values[index] = (fieldInfo as MapFieldInfo)._createMapField()
             ..addAll(map);
         }
       } else if (fieldInfo.isRepeated) {
         PbList? list = _values[index];
         if (list != null) {
-          _values[index] = fieldInfo._createRepeatedField(_message!)
-            ..addAll(list);
+          _values[index] = fieldInfo._createRepeatedField()..addAll(list);
         }
       }
     }

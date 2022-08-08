@@ -219,15 +219,15 @@ class FieldInfo<T> {
   ///
   /// Delegates actual list creation to the message, so that it can
   /// be overridden by a mixin.
-  List<T?> _createRepeatedField(GeneratedMessage m) {
+  List<T?> _createRepeatedField() {
     assert(isRepeated);
-    return m.createRepeatedField<T>(tagNumber, this);
+    return PbList<T>(check: check);
   }
 
   /// Same as above, but allow a tighter typed List to be created.
-  List<S> _createRepeatedFieldWithType<S extends T>(GeneratedMessage m) {
+  List<S> _createRepeatedFieldWithType<S>() {
     assert(isRepeated);
-    return m.createRepeatedField<S>(tagNumber, this as FieldInfo<S>);
+    return PbList<S>(check: check);
   }
 
   /// Convenience method to thread this FieldInfo's reified type parameter to
@@ -295,8 +295,8 @@ class MapFieldInfo<K, V> extends FieldInfo<PbMap<K, V>?> {
     return fs._ensureMapField<K, V>(meta, this);
   }
 
-  Map<K, V> _createMapField(GeneratedMessage m) {
+  Map<K, V> _createMapField() {
     assert(isMapField);
-    return m.createMapField<K, V>(tagNumber, this);
+    return PbMap<K, V>(keyFieldType, valueFieldType);
   }
 }
