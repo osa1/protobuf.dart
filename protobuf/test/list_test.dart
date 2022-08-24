@@ -73,20 +73,26 @@ void main() {
     lb2.removeRange(5, 8);
     expect(lb2, [1, 2, 3, 9, 8, 9]);
 
-    expect(() => lb2.setRange(5, 7, [88, 99].take(2)), throwsRangeError);
+    expect(() => lb2.setRange(5, 7, [88, 99]), throwsRangeError);
     expect(lb2, [1, 2, 3, 9, 8, 9]);
 
-    expect(() => lb2.setRange(5, 7, [88, 99].take(2), 1), throwsRangeError);
+    expect(() => lb2.setRange(5, 7, [88, 99], 1), throwsRangeError);
     expect(lb2, [1, 2, 3, 9, 8, 9]);
 
-    expect(() => lb2.setRange(4, 6, [88, 99].take(1), 1), throwsStateError);
+    expect(() => lb2.setRange(4, 6, [88], 1), throwsStateError);
     expect(lb2, [1, 2, 3, 9, 8, 9]);
 
-    lb2.setRange(5, 6, [88, 99].take(2));
+    lb2.setRange(5, 6, [88, 99]);
     expect(lb2, [1, 2, 3, 9, 8, 88]);
 
-    lb2.setRange(5, 6, [88, 99].take(2), 1);
+    lb2.setRange(5, 6, [88, 99], 1);
     expect(lb2, [1, 2, 3, 9, 8, 99]);
+  });
+
+  test('PbList.setRange handles copying from self', () {
+    final list = PbList.from(<int>[1, 2, 3, 4, 5, 6, 7, 8]);
+    list.setRange(4, 8, list);
+    expect(list, [1, 2, 3, 4, 1, 2, 3, 4]);
   });
 
   test('PbList validates items', () {
@@ -219,14 +225,14 @@ void main() {
   });
 
   test('PbList.setAll leaves the list unmodified when a check fails', () {
-    final list = PbList.from(<int>[1, 2]);
+    final list = PbList.from(<int>[1, 2, 3, 4, 5]);
 
     list.setAll(1, SingleUseIterable(<int?>[0, 0, 0]));
-    expect(list, [1, 0]);
+    expect(list, [1, 0, 0, 0, 5]);
 
     expect(() => list.setAll(0, SingleUseIterable(<int?>[999, null, 999])),
         throwsA(isA<ArgumentError>()));
-    expect(list, [1, 0]);
+    expect(list, [1, 0, 0, 0, 5]);
   });
 }
 

@@ -103,16 +103,17 @@ class PbList<E> extends ListBase<E> {
   void setAll(int index, Iterable<E> iterable) {
     _checkModifiable('setAll');
     final oldValues = <E>[];
-    final nextIndex = index;
+    var nextIndex = index;
     for (final e in iterable.take(_wrappedList.length - index)) {
       try {
         _check(e);
       } catch (_) {
-        _wrappedList.replaceRange(index, oldValues.length, oldValues);
+        _wrappedList.replaceRange(index, index + oldValues.length, oldValues);
         rethrow;
       }
       oldValues.add(_wrappedList[nextIndex]);
       _wrappedList[nextIndex] = e;
+      nextIndex += 1;
     }
   }
 
@@ -149,10 +150,24 @@ class PbList<E> extends ListBase<E> {
   @override
   void setRange(int start, int end, Iterable<E> iterable, [int skipCount = 0]) {
     _checkModifiable('setRange');
-    // NOTE: In case `take()` returns less than `end - start` elements, the
-    // _wrappedList will fail with a `StateError`.
-    iterable.skip(skipCount).take(end - start).forEach(_check);
-    _wrappedList.setRange(start, end, iterable, skipCount);
+    RangeError.checkValidRange(start, end, _wrappedList.length);
+    final oldValues = <E>[];
+    var nextIndex = start;
+    for (final e in iterable.skip(skipCount).take(end - start)) {
+      try {
+        _check(e);
+      } catch (_) {
+        _wrappedList.replaceRange(start, start + oldValues.length, oldValues);
+        rethrow;
+      }
+      oldValues.add(_wrappedList[nextIndex]);
+      _wrappedList[nextIndex] = e;
+      nextIndex += 1;
+    }
+    if (oldValues.length < end - start) {
+      _wrappedList.replaceRange(start, start + oldValues.length, oldValues);
+      throw StateError('Too few elements'); // IterableElementError.tooFew()
+    }
   }
 
   @override
