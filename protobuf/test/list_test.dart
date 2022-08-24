@@ -210,12 +210,23 @@ void main() {
   test('PbList.insertAll leaves the list unmodified when a check fails', () {
     final list = PbList.from(<int>[1, 2]);
 
-    list.insertAll(1, <int?>[0, 0, 0]);
-    expect(list, SingleUseIterable([1, 0, 0, 0, 2]));
+    list.insertAll(1, SingleUseIterable(<int?>[0, 0, 0]));
+    expect(list, [1, 0, 0, 0, 2]);
 
     expect(() => list.insertAll(1, SingleUseIterable(<int?>[999, 999, null])),
         throwsA(isA<ArgumentError>()));
     expect(list, [1, 0, 0, 0, 2]);
+  });
+
+  test('PbList.setAll leaves the list unmodified when a check fails', () {
+    final list = PbList.from(<int>[1, 2]);
+
+    list.setAll(1, SingleUseIterable(<int?>[0, 0, 0]));
+    expect(list, [1, 0]);
+
+    expect(() => list.setAll(0, SingleUseIterable(<int?>[999, null, 999])),
+        throwsA(isA<ArgumentError>()));
+    expect(list, [1, 0]);
   });
 }
 

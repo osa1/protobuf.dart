@@ -46,7 +46,8 @@ class PbList<E> extends ListBase<E> {
       try {
         _check(e);
       } catch (_) {
-        _wrappedList.removeRange(_wrappedList.length - added, _wrappedList.length);
+        _wrappedList.removeRange(
+            _wrappedList.length - added, _wrappedList.length);
         rethrow;
       }
       _wrappedList.add(e);
@@ -101,8 +102,18 @@ class PbList<E> extends ListBase<E> {
   @override
   void setAll(int index, Iterable<E> iterable) {
     _checkModifiable('setAll');
-    iterable.forEach(_check);
-    _wrappedList.setAll(index, iterable);
+    final oldValues = <E>[];
+    final nextIndex = index;
+    for (final e in iterable.take(_wrappedList.length - index)) {
+      try {
+        _check(e);
+      } catch (_) {
+        _wrappedList.replaceRange(index, oldValues.length, oldValues);
+        rethrow;
+      }
+      oldValues.add(_wrappedList[nextIndex]);
+      _wrappedList[nextIndex] = e;
+    }
   }
 
   @override
