@@ -15,14 +15,14 @@ final badArgument = throwsA(invalidArgumentException);
 T cast<T>(x) => x;
 
 void main() {
-  test('testPbList handles basic operations', () {
-    var lb1 = PbList<int>();
+  test('PbList handles basic operations', () {
+    final lb1 = PbList<int>();
     expect(lb1, []);
 
     lb1.add(1);
     expect(lb1, [1]);
 
-    lb1.addAll([0, 2, 4, 6, 99]);
+    lb1.addAll(SingleUseIterable([0, 2, 4, 6, 99]));
     expect(lb1, [1, 0, 2, 4, 6, 99]);
 
     expect(lb1[3], 4);
@@ -62,9 +62,9 @@ void main() {
   });
 
   test('PbList handles range operations', () {
-    var lb2 = PbList<int>();
+    final lb2 = PbList<int>();
 
-    lb2.addAll([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    lb2.addAll(SingleUseIterable([1, 2, 3, 4, 5, 6, 7, 8, 9]));
     expect(lb2.sublist(3, 7), [4, 5, 6, 7]);
 
     lb2.setRange(3, 7, [9, 8, 7, 6]);
@@ -199,4 +199,29 @@ void main() {
       list.add(Int64.MIN_VALUE);
     }, returnsNormally, reason: 'could not add min Int64 to a PbList');
   });
+
+  test('PbList.addAll leaves the list unmodified when a check fails', () {
+    final list = PbList();
+    expect((() => list.addAll(<int?>[1, 2, 3, null])),
+        throwsA(isA<ArgumentError>()));
+    expect(list, []);
+  });
+}
+
+/// An iterator that throws an exception when traversed multiple times
+class SingleUseIterable<E> extends Iterable<E> {
+  bool used = false;
+
+  final Iterable<E> inner;
+
+  SingleUseIterable(this.inner);
+
+  @override
+  Iterator<E> get iterator {
+    if (used) {
+      throw 'Iterable already used';
+    }
+    used = true;
+    return inner.iterator;
+  }
 }
