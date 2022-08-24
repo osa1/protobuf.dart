@@ -104,7 +104,15 @@ class PbList<E> extends ListBase<E> {
     _checkModifiable('setAll');
     final oldValues = <E>[];
     var nextIndex = index;
-    for (final e in iterable.take(_wrappedList.length - index)) {
+
+    final iterator = iterable.iterator;
+    var hasNext = iterator.moveNext();
+
+    for (var x = 0; x < _wrappedList.length - index; x += 1) {
+      if (!hasNext) {
+        break;
+      }
+      final e = iterator.current;
       try {
         _check(e);
       } catch (_) {
@@ -114,6 +122,7 @@ class PbList<E> extends ListBase<E> {
       oldValues.add(_wrappedList[nextIndex]);
       _wrappedList[nextIndex] = e;
       nextIndex += 1;
+      hasNext = iterator.moveNext();
     }
   }
 
