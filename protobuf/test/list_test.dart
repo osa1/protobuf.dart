@@ -234,6 +234,13 @@ void main() {
         throwsA(isA<ArgumentError>()));
     expect(list, [1, 0, 0, 0, 5]);
   });
+
+  test('PbList.replaceRange traverses the iterable once', () {
+    final list = PbList.from(<int>[1, 2, 3, 4, 5]);
+
+    list.replaceRange(1, 4, SingleUseIterable(<int?>[0, 0, 0, 0, 0]));
+    expect(list, [1, 0, 0, 0, 0, 0, 5]);
+  });
 }
 
 /// An iterator that throws an exception when traversed multiple times

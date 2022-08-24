@@ -186,8 +186,10 @@ class PbList<E> extends ListBase<E> {
   @override
   void replaceRange(int start, int end, Iterable<E> newContents) {
     _checkModifiable('replaceRange');
-    final values = newContents.toList();
-    newContents.forEach(_check);
+    final values = newContents.map((e) {
+      _check(e);
+      return e;
+    }).toList();
     _wrappedList.replaceRange(start, end, values);
   }
 
