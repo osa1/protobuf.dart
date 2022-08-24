@@ -41,7 +41,9 @@ class PbList<E> extends ListBase<E> {
   @override
   void addAll(Iterable<E> iterable) {
     _checkModifiable('addAll');
-    iterable.forEach(_check);
+    for (final e in iterable) {
+      _check(e);
+    }
     _wrappedList.addAll(iterable);
   }
 
@@ -76,14 +78,18 @@ class PbList<E> extends ListBase<E> {
   @override
   void insertAll(int index, Iterable<E> iterable) {
     _checkModifiable('insertAll');
-    iterable.forEach(_check);
+    for (final e in iterable) {
+      _check(e);
+    }
     _wrappedList.insertAll(index, iterable);
   }
 
   @override
   void setAll(int index, Iterable<E> iterable) {
     _checkModifiable('setAll');
-    iterable.forEach(_check);
+    for (final e in iterable) {
+      _check(e);
+    }
     _wrappedList.setAll(index, iterable);
   }
 
@@ -120,9 +126,24 @@ class PbList<E> extends ListBase<E> {
   @override
   void setRange(int start, int end, Iterable<E> iterable, [int skipCount = 0]) {
     _checkModifiable('setRange');
-    // NOTE: In case `take()` returns less than `end - start` elements, the
-    // _wrappedList will fail with a `StateError`.
-    iterable.skip(skipCount).take(end - start).forEach(_check);
+
+    // Code below is closure-free implementation of
+    // iterable.skip(skipCount).take(end - start).forEach(_check);
+    final iterator = iterable.iterator;
+    var hasNext = iterator.moveNext();
+
+    for (var x = 0; x < skipCount; x += 1) {
+      hasNext = iterator.moveNext();
+    }
+
+    for (var x = 0; x < end - start; x += 1) {
+      if (!hasNext) {
+        break;
+      }
+      _check(iterator.current);
+      hasNext = iterator.moveNext();
+    }
+
     _wrappedList.setRange(start, end, iterable, skipCount);
   }
 
@@ -143,7 +164,9 @@ class PbList<E> extends ListBase<E> {
   void replaceRange(int start, int end, Iterable<E> newContents) {
     _checkModifiable('replaceRange');
     final values = newContents.toList();
-    newContents.forEach(_check);
+    for (final e in newContents) {
+      _check(e);
+    }
     _wrappedList.replaceRange(start, end, values);
   }
 

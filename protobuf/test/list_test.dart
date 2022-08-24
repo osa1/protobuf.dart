@@ -73,19 +73,19 @@ void main() {
     lb2.removeRange(5, 8);
     expect(lb2, [1, 2, 3, 9, 8, 9]);
 
-    expect(() => lb2.setRange(5, 7, [88, 99].take(2)), throwsRangeError);
+    expect(() => lb2.setRange(5, 7, [88, 99]), throwsRangeError);
     expect(lb2, [1, 2, 3, 9, 8, 9]);
 
-    expect(() => lb2.setRange(5, 7, [88, 99].take(2), 1), throwsRangeError);
+    expect(() => lb2.setRange(5, 7, [88, 99], 1), throwsRangeError);
     expect(lb2, [1, 2, 3, 9, 8, 9]);
 
-    expect(() => lb2.setRange(4, 6, [88, 99].take(1), 1), throwsStateError);
+    expect(() => lb2.setRange(4, 6, [88], 1), throwsStateError);
     expect(lb2, [1, 2, 3, 9, 8, 9]);
 
-    lb2.setRange(5, 6, [88, 99].take(2));
+    lb2.setRange(5, 6, [88, 99]);
     expect(lb2, [1, 2, 3, 9, 8, 88]);
 
-    lb2.setRange(5, 6, [88, 99].take(2), 1);
+    lb2.setRange(5, 6, [88, 99], 1);
     expect(lb2, [1, 2, 3, 9, 8, 99]);
   });
 
