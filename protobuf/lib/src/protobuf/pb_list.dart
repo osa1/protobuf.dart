@@ -151,22 +151,37 @@ class PbList<E> extends ListBase<E> {
   void setRange(int start, int end, Iterable<E> iterable, [int skipCount = 0]) {
     _checkModifiable('setRange');
     RangeError.checkValidRange(start, end, _wrappedList.length);
+
+    final iterator = iterable.iterator;
+    var hasNext = iterator.moveNext();
+
+    for (var x = 0; x < skipCount; x += 1) {
+      hasNext = iterator.moveNext();
+    }
+
+    if (!hasNext && start < end) {
+      throw StateError('Too few elements'); // IterableElementError.tooFew()
+    }
+
     final oldValues = <E>[];
     var nextIndex = start;
-    for (final e in iterable.skip(skipCount).take(end - start)) {
+
+    final lastX = end - start - 1;
+    for (var x = 0; x <= lastX; x += 1) {
+      final newElement = iterator.current;
       try {
-        _check(e);
+        _check(newElement);
       } catch (_) {
         _wrappedList.replaceRange(start, start + oldValues.length, oldValues);
         rethrow;
       }
       oldValues.add(_wrappedList[nextIndex]);
-      _wrappedList[nextIndex] = e;
+      _wrappedList[nextIndex] = newElement;
       nextIndex += 1;
-    }
-    if (oldValues.length < end - start) {
-      _wrappedList.replaceRange(start, start + oldValues.length, oldValues);
-      throw StateError('Too few elements'); // IterableElementError.tooFew()
+      if (!iterator.moveNext() && x < lastX) {
+        _wrappedList.replaceRange(start, start + oldValues.length, oldValues);
+        throw StateError('Too few elements'); // IterableElementError.tooFew()
+      }
     }
   }
 

@@ -89,12 +89,6 @@ void main() {
     expect(lb2, [1, 2, 3, 9, 8, 99]);
   });
 
-  test('PbList.setRange handles copying from self', () {
-    final list = PbList.from(<int>[1, 2, 3, 4, 5, 6, 7, 8]);
-    list.setRange(4, 8, list);
-    expect(list, [1, 2, 3, 4, 1, 2, 3, 4]);
-  });
-
   test('PbList validates items', () {
     expect(() {
       (PbList<int>() as dynamic).add('hello');
