@@ -41,9 +41,7 @@ class PbList<E> extends ListBase<E> {
   @override
   void addAll(Iterable<E> iterable) {
     _checkModifiable('addAll');
-
     var added = 0;
-
     for (final e in iterable) {
       try {
         _check(e);
@@ -87,8 +85,17 @@ class PbList<E> extends ListBase<E> {
   @override
   void insertAll(int index, Iterable<E> iterable) {
     _checkModifiable('insertAll');
-    iterable.forEach(_check);
-    _wrappedList.insertAll(index, iterable);
+    final lengthBefore = _wrappedList.length;
+    try {
+      _wrappedList.insertAll(index, iterable.map((e) {
+        _check(e);
+        return e;
+      }));
+    } catch (_) {
+      final added = _wrappedList.length - lengthBefore;
+      _wrappedList.removeRange(index, index + added);
+      rethrow;
+    }
   }
 
   @override
