@@ -43,14 +43,7 @@ abstract class GeneratedMessage {
   EventPlugin? get eventPlugin => null;
 
   /// Creates a deep copy of the fields in this message.
-  GeneratedMessage clone() {
-    final message = info_.createEmptyInstance!();
-    final fieldSet = __fieldSet;
-    if (fieldSet != null) {
-      message.__fieldSet = fieldSet.deepCopy(message, freeze: false);
-    }
-    return message;
-  }
+  GeneratedMessage clone() => deepCopy();
 
   /// Creates an empty instance of the same message type as this.
   ///
