@@ -31,6 +31,8 @@ class PbList<E> extends ListBase<E> {
       : _wrappedList = List<E>.from(from),
         _check = _checkNotNull;
 
+  PbList._(this._wrappedList, this._check, this._isReadOnly);
+
   @override
   void add(E element) {
     _checkModifiable('add');
@@ -199,5 +201,26 @@ class PbList<E> extends ListBase<E> {
 
   static Never _readOnlyError(String methodName) {
     throw UnsupportedError("'$methodName' on a read-only list");
+  }
+
+  PbList<E> deepCopy({bool freeze = false}) {
+    // TODO: We know the capacity, is it possible to allocate a list with the right size?
+    final wrappedList = <E>[];
+
+    for (final value in _wrappedList) {
+      // TODO: I'm not sure why I need to cast to dynamic below. If `value : E`
+      // and `value : PbMap`, then `value.deepCopy : E`
+      if (value is PbMap) {
+        wrappedList.add(value.deepCopy(freeze: freeze) as dynamic);
+      } else if (value is PbList) {
+        wrappedList.add(value.deepCopy(freeze: freeze) as dynamic);
+      } else if (value is GeneratedMessage) {
+        wrappedList.add(value.deepCopy(freeze: freeze) as dynamic);
+      } else {
+        wrappedList.add(value);
+      }
+    }
+
+    return PbList._(wrappedList, _check, freeze);
   }
 }

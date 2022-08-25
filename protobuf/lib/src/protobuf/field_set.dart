@@ -78,6 +78,9 @@ class _FieldSet {
       : _values = _makeValueList(meta.byIndex.length),
         _oneofCases = meta.oneofs.isEmpty ? null : <int, int>{};
 
+  _FieldSet._(this._message, this._eventPlugin, this._values, this._extensions,
+      this._unknownFields, this._frozenState, this._oneofCases);
+
   static List _makeValueList(int length) {
     if (length == 0) return _zeroList;
     return List.filled(length, null, growable: false);
@@ -891,5 +894,32 @@ class _FieldSet {
     }
 
     _oneofCases?.addAll(original._oneofCases!);
+  }
+
+  _FieldSet deepCopy(GeneratedMessage message, {bool freeze = false}) {
+    final values = _makeValueList(_values.length);
+
+    for (var valueIdx = 0; valueIdx < _values.length; valueIdx += 1) {
+      final value = _values[valueIdx];
+      if (value is PbMap) {
+        values[valueIdx] = value.deepCopy(freeze: freeze);
+      } else if (value is PbList) {
+        values[valueIdx] = value.deepCopy(freeze: freeze);
+      } else if (value is GeneratedMessage) {
+        values[valueIdx] = value.deepCopy(freeze: freeze);
+      } else {
+        values[valueIdx] = value;
+      }
+    }
+
+    return _FieldSet._(
+      message,
+      null, // TODO: event plugin
+      values,
+      _extensions?.deepCopy(),
+      _unknownFields?.deepCopy(),
+      _frozenState, // TODO: Not sure about this part
+      _oneofCases == null ? null : Map.from(_oneofCases!),
+    );
   }
 }

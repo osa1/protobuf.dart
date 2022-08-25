@@ -195,6 +195,10 @@ class UnknownFieldSet {
       _throwFrozenMessageModificationError('UnknownFieldSet', methodName);
     }
   }
+
+  UnknownFieldSet deepCopy() {
+    throw 'TODO';
+  }
 }
 
 /// An unknown field in a [UnknownFieldSet].

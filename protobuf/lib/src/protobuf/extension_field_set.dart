@@ -199,4 +199,8 @@ class _ExtensionFieldSet {
           'use `ExtensionRegistry.reparseMessage`.');
     }
   }
+
+  _ExtensionFieldSet deepCopy() {
+    throw 'TODO';
+  }
 }
