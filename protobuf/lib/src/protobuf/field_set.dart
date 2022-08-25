@@ -917,7 +917,7 @@ class _FieldSet {
       values,
       null,
       _unknownFields?.deepCopy(freeze: freeze),
-      _frozenState, // TODO: Not sure about this part
+      freeze, // TODO: Can we use `_frozenState` here?
       _oneofCases == null ? null : Map.from(_oneofCases!),
     );
 

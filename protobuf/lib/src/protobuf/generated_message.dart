@@ -47,7 +47,7 @@ abstract class GeneratedMessage {
     final message = info_.createEmptyInstance!();
     final fieldSet = __fieldSet;
     if (fieldSet != null) {
-      message.__fieldSet = fieldSet.deepCopy(message);
+      message.__fieldSet = fieldSet.deepCopy(message, freeze: false);
     }
     return message;
   }
