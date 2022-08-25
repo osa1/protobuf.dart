@@ -215,7 +215,8 @@ class PbList<E> extends ListBase<E> {
       } else if (value is PbList) {
         wrappedList.add(value.deepCopy(freeze: freeze) as dynamic);
       } else if (value is GeneratedMessage) {
-        wrappedList.add(value.deepCopy(freeze: freeze) as dynamic);
+        final GeneratedMessage message = value;
+        wrappedList.add(message.deepCopy(freeze: freeze) as dynamic);
       } else {
         wrappedList.add(value);
       }

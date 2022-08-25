@@ -6,11 +6,20 @@ part of protobuf;
 
 class _ExtensionFieldSet {
   final _FieldSet _parent;
-  final Map<int, Extension> _info = <int, Extension>{};
-  final Map<int, dynamic> _values = <int, dynamic>{};
-  bool _isReadOnly = false;
 
-  _ExtensionFieldSet(this._parent);
+  final Map<int, Extension> _info;
+
+  final Map<int, dynamic> _values;
+
+  bool _isReadOnly;
+
+  _ExtensionFieldSet(this._parent)
+      : _info = <int, Extension>{},
+        _values = <int, dynamic>{},
+        _isReadOnly = false;
+
+  _ExtensionFieldSet._(
+      this._parent, this._info, this._values, this._isReadOnly);
 
   Extension? _getInfoOrNull(int? tagNumber) => _info[tagNumber];
 
@@ -200,7 +209,29 @@ class _ExtensionFieldSet {
     }
   }
 
-  _ExtensionFieldSet deepCopy() {
-    throw 'TODO';
+  _ExtensionFieldSet deepCopy(_FieldSet parent, {bool freeze = false}) {
+    final values = <int, dynamic>{};
+
+    for (final entry in _values.entries) {
+      final key = entry.key;
+      final value = entry.value;
+
+      if (value is PbMap) {
+        values[key] = value.deepCopy(freeze: freeze) as dynamic;
+      } else if (value is PbList) {
+        values[key] = value.deepCopy(freeze: freeze) as dynamic;
+      } else if (value is GeneratedMessage) {
+        values[key] = value.deepCopy(freeze: freeze) as dynamic;
+      } else {
+        values[key] = value;
+      }
+    }
+
+    return _ExtensionFieldSet._(
+      parent,
+      _info,
+      values,
+      freeze,
+    );
   }
 }

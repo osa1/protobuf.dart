@@ -912,14 +912,18 @@ class _FieldSet {
       }
     }
 
-    return _FieldSet._(
+    final copy = _FieldSet._(
       message,
       null, // TODO: event plugin
       values,
-      _extensions?.deepCopy(),
-      _unknownFields?.deepCopy(),
+      null,
+      _unknownFields?.deepCopy(freeze: freeze),
       _frozenState, // TODO: Not sure about this part
       _oneofCases == null ? null : Map.from(_oneofCases!),
     );
+
+    copy._extensions = _extensions?.deepCopy(copy, freeze: freeze);
+
+    return copy;
   }
 }

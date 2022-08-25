@@ -135,7 +135,8 @@ class PbMap<K, V> extends MapBase<K, V> {
       } else if (value is PbList) {
         wrappedMap[key] = value.deepCopy(freeze: freeze) as dynamic;
       } else if (value is GeneratedMessage) {
-        wrappedMap[key] = value.deepCopy(freeze: freeze) as dynamic;
+        final GeneratedMessage message = value;
+        wrappedMap[key] = message.deepCopy(freeze: freeze) as dynamic;
       } else {
         wrappedMap[key] = value;
       }
