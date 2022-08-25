@@ -586,10 +586,7 @@ extension GeneratedMessageGenericExtensions<T extends GeneratedMessage> on T {
   /// Returns a writable deep copy of this message.
   T deepCopy({bool freeze = false}) {
     final T message = info_.createEmptyInstance!() as dynamic;
-    final fieldSet = __fieldSet;
-    if (fieldSet != null) {
-      message.__fieldSet = fieldSet.deepCopy(message, freeze: freeze);
-    }
+    message.__fieldSet = __fieldSet?.deepCopy(message, freeze: freeze);
     return message;
   }
 }
