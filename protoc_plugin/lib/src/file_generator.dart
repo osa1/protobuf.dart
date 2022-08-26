@@ -11,6 +11,8 @@ const String _fixnumImportPrefix = r'$fixnum';
 const String _typedDataImportPrefix = r'$typed_data';
 const String _protobufImport =
     "import 'package:protobuf/protobuf.dart' as $protobufImportPrefix;";
+const String _protobufExtensionsExport =
+    "export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;";
 const String _asyncImport = "import 'dart:async' as $asyncImportPrefix;";
 const String _coreImport = "import 'dart:core' as $coreImportPrefix;";
 const String _typedDataImport =
@@ -365,6 +367,11 @@ class FileGenerator extends ProtobufContainer {
       var resolvedImport =
           config.resolveImport(protoFileUri, protoFileUri, '.pbenum.dart');
       out.println("export '$resolvedImport';");
+      out.println();
+    }
+
+    if (_needsProtobufImport) {
+      out.println(_protobufExtensionsExport);
       out.println();
     }
   }

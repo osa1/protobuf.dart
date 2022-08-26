@@ -42,13 +42,6 @@ abstract class GeneratedMessage {
   /// to protobuf fields.
   EventPlugin? get eventPlugin => null;
 
-  /// Creates a deep copy of the fields in this message.
-  /// (The generated code uses [mergeFromMessage].)
-  @Deprecated('Using this can add significant size overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  GeneratedMessage clone();
-
   /// Creates an empty instance of the same message type as this.
   ///
   /// This method is useful when you have a value of type [GeneratedMessage] or
@@ -579,4 +572,7 @@ extension GeneratedMessageGenericExtensions<T extends GeneratedMessage> on T {
 
   /// Returns a writable deep copy of this message.
   T deepCopy() => info_.createEmptyInstance!() as T..mergeFromMessage(this);
+
+  /// Creates a deep copy of the fields in this message.
+  T clone() => deepCopy();
 }

@@ -12,6 +12,8 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package1.pb.dart' as $1;
 import 'package2.pb.dart' as $2;
 
+export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
 class M extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'M', createEmptyInstance: create)
     ..aOM<M>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'm', subBuilder: M.create)
