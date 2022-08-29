@@ -909,7 +909,8 @@ class _FieldSet {
     _oneofCases?.addAll(original._oneofCases!);
   }
 
-  _FieldSet deepCopy(GeneratedMessage message, {bool freeze = false}) {
+  _FieldSet deepCopy(GeneratedMessage message, EventPlugin? eventPlugin,
+      {bool freeze = false}) {
     final values = _makeValueList(_values.length);
 
     for (var valueIdx = 0; valueIdx < _values.length; valueIdx += 1) {
@@ -927,7 +928,7 @@ class _FieldSet {
 
     final copy = _FieldSet._(
       message,
-      null, // TODO: event plugin
+      eventPlugin,
       values,
       null,
       _unknownFields?.deepCopy(freeze: freeze),
