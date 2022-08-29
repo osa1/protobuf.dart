@@ -210,13 +210,17 @@ class PbList<E> extends ListBase<E> {
     final wrappedList = <E>[];
 
     for (final value in _wrappedList) {
-      // TODO: I'm not sure why I need to cast to dynamic below. If `value : E`
-      // and `value : PbMap`, then `value.deepCopy : E`
       if (value is PbMap) {
         wrappedList.add(value.deepCopy(freeze: freeze) as dynamic);
       } else if (value is PbList) {
         wrappedList.add(value.deepCopy(freeze: freeze) as dynamic);
       } else if (value is GeneratedMessage) {
+        // Type of `value` is promoted in this block to the intersection type
+        // of `GeneratedMessage` and `E`.
+        //
+        // Because intersection types are not reified, the bound `T extends
+        // GeneratedMessage` does not hold for the type of `value`, so we need
+        // to cast it to `GeneratedMessage`.
         final GeneratedMessage message = value;
         wrappedList.add(message.deepCopy(freeze: freeze) as dynamic);
       } else {
