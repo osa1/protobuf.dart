@@ -219,16 +219,51 @@ class _ExtensionFieldSet {
     for (final entry in _values.entries) {
       final key = entry.key;
       final value = entry.value;
+      final fieldInfo = _info[key]!;
 
-      if (value is PbMap) {
-        values[key] = value.deepCopy(freeze: freeze) as dynamic;
-      } else if (value is PbList) {
-        values[key] = value.deepCopy(freeze: freeze) as dynamic;
-      } else if (value is GeneratedMessage) {
-        values[key] = value.deepCopy(freeze: freeze) as dynamic;
-      } else {
-        values[key] = value;
+      if (fieldInfo.isRepeated) {
+        final repeated = fieldInfo._createRepeatedField(parent._message!);
+        values[key] = repeated;
+
+        if (_isGroupOrMessage(fieldInfo.type)) {
+          final List<GeneratedMessage> listValue = value;
+          for (final message in listValue) {
+            repeated.add(message.deepCopy());
+          }
+          // repeated.addAll(listValue.map((message) => message.deepCopy()));
+        } else {
+          final List<dynamic> listValue = value;
+          repeated.addAll(listValue);
+        }
+
+        continue;
       }
+
+      if (fieldInfo.isMapField) {
+        final MapFieldInfo<dynamic, dynamic> mapFieldInfo = fieldInfo as dynamic;
+        final map = mapFieldInfo._createMapField(parent._message!);
+        values[key] = map;
+
+        if (_isGroupOrMessage(mapFieldInfo.valueFieldType)) {
+          Map<dynamic, GeneratedMessage> mapValue = value;
+          for (final entry in mapValue.entries) {
+            map[entry.key] = entry.value.deepCopy();
+          }
+        } else {
+          Map<dynamic, dynamic> mapValue = value;
+          map.addAll(mapValue);
+        }
+
+        continue;
+      }
+
+      if (fieldInfo.isGroupOrMessage) {
+        final GeneratedMessage messageValue = value;
+        values[key] = messageValue.deepCopy(freeze: freeze);
+        continue;
+      }
+
+      values[key] = value;
     }
 
     return _ExtensionFieldSet._(
