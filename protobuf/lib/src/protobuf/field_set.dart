@@ -942,7 +942,8 @@ class _FieldSet {
       }
 
       if (fieldInfo.isMapField) {
-        final MapFieldInfo<dynamic, dynamic> mapFieldInfo = fieldInfo as dynamic;
+        final MapFieldInfo<dynamic, dynamic> mapFieldInfo =
+            fieldInfo as dynamic;
         final map = mapFieldInfo._createMapField(message);
         values[valueIdx] = map;
 

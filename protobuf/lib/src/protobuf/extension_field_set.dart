@@ -240,7 +240,8 @@ class _ExtensionFieldSet {
       }
 
       if (fieldInfo.isMapField) {
-        final MapFieldInfo<dynamic, dynamic> mapFieldInfo = fieldInfo as dynamic;
+        final MapFieldInfo<dynamic, dynamic> mapFieldInfo =
+            fieldInfo as dynamic;
         final map = mapFieldInfo._createMapField(parent._message!);
         values[key] = map;
 
