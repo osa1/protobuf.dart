@@ -33,8 +33,6 @@ class PbList<E> extends ListBase<E> {
         _check = _checkNotNull,
         _isReadOnly = false;
 
-  PbList._(this._wrappedList, this._check, this._isReadOnly);
-
   @override
   void add(E element) {
     _checkModifiable('add');
@@ -203,31 +201,5 @@ class PbList<E> extends ListBase<E> {
 
   static Never _readOnlyError(String methodName) {
     throw UnsupportedError("'$methodName' on a read-only list");
-  }
-
-  PbList<E> deepCopy({bool freeze = false}) {
-    // TODO: We know the capacity, is it possible to allocate a list with the right size?
-    final wrappedList = <E>[];
-
-    for (final value in _wrappedList) {
-      if (value is PbMap) {
-        wrappedList.add(value.deepCopy(freeze: freeze) as dynamic);
-      } else if (value is PbList) {
-        wrappedList.add(value.deepCopy(freeze: freeze) as dynamic);
-      } else if (value is GeneratedMessage) {
-        // Type of `value` is promoted in this block to the intersection type
-        // of `GeneratedMessage` and `E`.
-        //
-        // Because intersection types are not reified, the bound `T extends
-        // GeneratedMessage` does not hold for the type of `value`, so we need
-        // to cast it to `GeneratedMessage`.
-        final GeneratedMessage message = value;
-        wrappedList.add(message.deepCopy(freeze: freeze) as dynamic);
-      } else {
-        wrappedList.add(value);
-      }
-    }
-
-    return PbList._(wrappedList, _check, freeze);
   }
 }

@@ -33,9 +33,6 @@ class PbMap<K, V> extends MapBase<K, V> {
         _wrappedMap = Map.unmodifiable(other._wrappedMap),
         _isReadonly = true;
 
-  PbMap._(this.keyFieldType, this.valueFieldType, this._wrappedMap,
-      this._isReadonly);
-
   @override
   V? operator [](Object? key) => _wrappedMap[key];
 
@@ -121,27 +118,5 @@ class PbMap<K, V> extends MapBase<K, V> {
       }
     }
     return this;
-  }
-
-  PbMap<K, V> deepCopy({bool freeze = false}) {
-    final wrappedMap = <K, V>{};
-
-    for (final entry in _wrappedMap.entries) {
-      final key = entry.key;
-      final value = entry.value;
-
-      if (value is PbMap) {
-        wrappedMap[key] = value.deepCopy(freeze: freeze) as dynamic;
-      } else if (value is PbList) {
-        wrappedMap[key] = value.deepCopy(freeze: freeze) as dynamic;
-      } else if (value is GeneratedMessage) {
-        final GeneratedMessage message = value;
-        wrappedMap[key] = message.deepCopy(freeze: freeze) as dynamic;
-      } else {
-        wrappedMap[key] = value;
-      }
-    }
-
-    return PbMap._(keyFieldType, valueFieldType, wrappedMap, freeze);
   }
 }
