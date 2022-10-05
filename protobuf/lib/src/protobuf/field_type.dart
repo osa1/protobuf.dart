@@ -25,7 +25,7 @@ class PbFieldType {
   /// Returns the base field type without any of the required, repeated
   /// and packed bits.
   static int _baseType(int fieldType) =>
-      fieldType & ~(_REQUIRED_BIT | _REPEATED_BIT | _PACKED_BIT | _MAP_BIT);
+      fieldType & ~(_REQUIRED_BIT | _REPEATED_BIT | _PACKED_BIT);
 
   static MakeDefaultFunc? _defaultForType(int type) {
     switch (type) {
@@ -174,7 +174,7 @@ class PbFieldType {
   static const int _PACKED_SFIXED64 =
       _REPEATED_BIT | _PACKED_BIT | _SFIXED64_BIT;
 
-  static const int _MAP = _MAP_BIT | _MESSAGE_BIT;
+  static const int _MAP = _MAP_BIT;
   // Short names for use in generated code.
 
   // _O_ptional.

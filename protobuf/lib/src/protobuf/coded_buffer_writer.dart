@@ -388,6 +388,7 @@ class CodedBufferWriter {
         _writeInt64(value);
         break;
       case PbFieldType._MESSAGE_BIT:
+      case PbFieldType._MAP_BIT:
         final mark = _startLengthDelimited();
         final GeneratedMessage msg = value;
         msg.writeToCodedBufferWriter(this);

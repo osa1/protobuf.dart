@@ -51,6 +51,7 @@ Map<String, dynamic> _writeToJsonMap(_FieldSet fs) {
         return int_.toStringUnsigned();
       case PbFieldType._GROUP_BIT:
       case PbFieldType._MESSAGE_BIT:
+      case PbFieldType._MAP_BIT:
         final GeneratedMessage msg = fieldValue;
         return msg.writeToJsonMap();
       default:
@@ -276,6 +277,7 @@ dynamic _convertJsonValue(BuilderInfo meta, _FieldSet fs, value, int tagNumber,
       break;
     case PbFieldType._GROUP_BIT:
     case PbFieldType._MESSAGE_BIT:
+    case PbFieldType._MAP_BIT:
       if (value is Map) {
         final messageValue = value as Map<String, dynamic>;
         var subMessage = meta._makeEmptyMessage(tagNumber, registry);

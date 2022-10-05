@@ -62,6 +62,7 @@ bool _wireTypeMatches(int fieldType, int wireType) {
     case PbFieldType._BYTES_BIT:
     case PbFieldType._STRING_BIT:
     case PbFieldType._MESSAGE_BIT:
+    case PbFieldType._MAP_BIT:
       return wireType == WIRETYPE_LENGTH_DELIMITED;
     case PbFieldType._GROUP_BIT:
       return wireType == WIRETYPE_START_GROUP;
