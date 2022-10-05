@@ -73,7 +73,7 @@ String? _getFieldError(int fieldType, var value) {
 ///
 /// @nodoc
 CheckFunc getCheckFunction(int fieldType) {
-  switch (fieldType & ~0x7) {
+  switch (PbFieldType._baseType(fieldType)) {
     case PbFieldType._BOOL_BIT:
     case PbFieldType._BYTES_BIT:
     case PbFieldType._STRING_BIT:
