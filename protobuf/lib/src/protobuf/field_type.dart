@@ -15,17 +15,21 @@ bool _isEnum(int fieldType) =>
 bool _isBytes(int fieldType) =>
     PbFieldType._baseType(fieldType) == PbFieldType._BYTES_BIT;
 
-bool _isGroupOrMessage(int fieldType) =>
-    (fieldType & (PbFieldType._GROUP_BIT | PbFieldType._MESSAGE_BIT)) != 0;
+bool _isGroupOrMessage(int fieldType) {
+  final baseType = PbFieldType._baseType(fieldType);
+  return baseType == PbFieldType._GROUP_BIT ||
+      baseType == PbFieldType._MESSAGE_BIT ||
+      baseType == PbFieldType._MAP_BIT;
+}
 
-bool _isMapField(int fieldType) => (fieldType & PbFieldType._MAP_BIT) != 0;
+bool _isMapField(int fieldType) =>
+    PbFieldType._baseType(fieldType) == PbFieldType._MAP_BIT;
 
 /// Defines constants and functions for dealing with fieldType bits.
 class PbFieldType {
   /// Returns the base field type without any of the required, repeated
   /// and packed bits.
-  static int _baseType(int fieldType) =>
-      fieldType & ~(_REQUIRED_BIT | _REPEATED_BIT | _PACKED_BIT | _MAP_BIT);
+  static int _baseType(int fieldType) => fieldType & _TYPE_MASK;
 
   static MakeDefaultFunc? _defaultForType(int type) {
     switch (type) {
@@ -76,29 +80,38 @@ class PbFieldType {
   static int _INT_ZERO() => 0;
   static double _DOUBLE_ZERO() => 0.0;
 
-  static const int _REQUIRED_BIT = 0x1;
-  static const int _REPEATED_BIT = 0x2;
-  static const int _PACKED_BIT = 0x4;
+  // 5 bits the field type.
+  static const int _BOOL_BIT = 1;
+  static const int _BYTES_BIT = 2;
+  static const int _STRING_BIT = 3;
+  static const int _DOUBLE_BIT = 4;
+  static const int _FLOAT_BIT = 5;
+  static const int _ENUM_BIT = 6;
+  static const int _GROUP_BIT = 7;
+  static const int _INT32_BIT = 8;
+  static const int _INT64_BIT = 9;
+  static const int _SINT32_BIT = 10;
+  static const int _SINT64_BIT = 11;
+  static const int _UINT32_BIT = 12;
+  static const int _UINT64_BIT = 13;
+  static const int _FIXED32_BIT = 14;
+  static const int _FIXED64_BIT = 15;
+  static const int _SFIXED32_BIT = 16;
+  static const int _SFIXED64_BIT = 17;
+  static const int _MESSAGE_BIT = 18;
+  static const int _MAP_BIT = 19;
 
-  static const int _BOOL_BIT = 0x10;
-  static const int _BYTES_BIT = 0x20;
-  static const int _STRING_BIT = 0x40;
-  static const int _DOUBLE_BIT = 0x80;
-  static const int _FLOAT_BIT = 0x100;
-  static const int _ENUM_BIT = 0x200;
-  static const int _GROUP_BIT = 0x400;
-  static const int _INT32_BIT = 0x800;
-  static const int _INT64_BIT = 0x1000;
-  static const int _SINT32_BIT = 0x2000;
-  static const int _SINT64_BIT = 0x4000;
-  static const int _UINT32_BIT = 0x8000;
-  static const int _UINT64_BIT = 0x10000;
-  static const int _FIXED32_BIT = 0x20000;
-  static const int _FIXED64_BIT = 0x40000;
-  static const int _SFIXED32_BIT = 0x80000;
-  static const int _SFIXED64_BIT = 0x100000;
-  static const int _MESSAGE_BIT = 0x200000;
-  static const int _MAP_BIT = 0x400000;
+  // Bit 6 = required.
+  static const int _REQUIRED_BIT = 32;
+
+  // Bit 7 = repeated.
+  static const int _REPEATED_BIT = 64;
+
+  // Bit 8 = packed.
+  static const int _PACKED_BIT = 128;
+
+  // 0b11111, masks the type bits.
+  static const int _TYPE_MASK = 31;
 
   static const int _OPTIONAL_BOOL = _BOOL_BIT;
   static const int _OPTIONAL_BYTES = _BYTES_BIT;
@@ -174,7 +187,6 @@ class PbFieldType {
   static const int _PACKED_SFIXED64 =
       _REPEATED_BIT | _PACKED_BIT | _SFIXED64_BIT;
 
-  static const int _MAP = _MAP_BIT | _MESSAGE_BIT;
   // Short names for use in generated code.
 
   // _O_ptional.
@@ -253,5 +265,5 @@ class PbFieldType {
   static const int KSF3 = _PACKED_SFIXED32;
   static const int KSF6 = _PACKED_SFIXED64;
 
-  static const int M = _MAP;
+  static const int M = _MAP_BIT;
 }

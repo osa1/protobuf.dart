@@ -277,6 +277,7 @@ void _mergeFromProto3Json(
               'Expected int or stringified int', value);
         case PbFieldType._GROUP_BIT:
         case PbFieldType._MESSAGE_BIT:
+        case PbFieldType._MAP_BIT:
           final subMessage = fieldInfo.subBuilder!();
           recursionHelper(value, subMessage._fieldSet);
           return subMessage;
